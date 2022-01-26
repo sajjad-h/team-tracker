@@ -3,6 +3,7 @@ package com.example.teamtracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -20,6 +28,12 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main-activity-tag";
@@ -35,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -101,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 String personFamilyName = acct.getFamilyName();
                 String personEmail = acct.getEmail();
                 String personId = acct.getId();
+                String idToken = acct.getIdToken();
+                System.out.println(idToken);
+                sendIdTokenToBackendServer(idToken, personEmail);
                 Uri personPhoto = acct.getPhotoUrl();
                 helloTextView.setText("Hello " + personName);
                 makeSignedInButtonState();
@@ -110,6 +128,60 @@ public class MainActivity extends AppCompatActivity {
         } catch (ApiException e) {
             Log.d(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
+    }
+
+    private void sendIdTokenToBackendServer(final String idToken, final String email) {
+        final Context context = getApplicationContext();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    RequestQueue queue = Volley.newRequestQueue(context);
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sajjad.hopto.org:8080/backend/tokensignin/",
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    System.out.println(response);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        String resIdToken = jsonObject.getString("idToken");
+                                        String resEmail = jsonObject.getString("email");
+                                        if (resEmail.equals(email)) {
+                                            Toast.makeText(context, "good result!", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    System.out.println(error);
+                                }
+                            }
+                    ) {
+                        @Override
+                        protected Map<String,String> getParams(){
+                            Map<String,String> params = new HashMap<String, String>();
+                            params.put("idToken",idToken);
+                            return params;
+                        }
+
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String,String> params = new HashMap<String, String>();
+                            params.put("Content-Type","application/x-www-form-urlencoded");
+                            return params;
+                        }
+                    };
+                    queue.add(stringRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     private void handleSignOutResult() {
