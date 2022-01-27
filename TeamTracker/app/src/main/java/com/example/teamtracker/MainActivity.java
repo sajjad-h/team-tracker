@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main-activity-tag";
-    private static final String SERVER_OAUTH_LOGIN_URL = "http://sajjad.hopto.org:8080/backend/api/google-oauth-login?idToken=";
+    private static final String SERVER_OAUTH_LOGIN_URL = "http://team-tracker.servehttp.com/api/google-oauth-login?idToken=";
     private GoogleSignInClient mGoogleSignInClient = null;
     private final Integer RC_SIGN_IN = 100;
     private SignInButton signInButton;
@@ -62,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
         if (account == null) {
             makeSignedOutButtonState();
-        }
-        else {
+        } else {
             makeSignedInButtonState();
         }
 
@@ -137,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     RequestQueue queue = Volley.newRequestQueue(context);
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, SERVER_OAUTH_LOGIN_URL + idToken,
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                            SERVER_OAUTH_LOGIN_URL + idToken,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -146,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
                                         String status = jsonObject.getString("status");
                                         if (status.equals("OK")) {
                                             String accessToken = jsonObject.getString("access_token");
-                                            Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG)
+                                                    .show();
                                         } else {
                                             Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }
@@ -160,23 +161,22 @@ public class MainActivity extends AppCompatActivity {
                                 public void onErrorResponse(VolleyError error) {
                                     System.out.println(error);
                                 }
-                            }
-                    ) {
+                            }) {
                         /**
                          * Work only on POST method
                          *
-                        @Override
-                        protected Map<String,String> getParams(){
-                            Map<String,String> params = new HashMap<String, String>();
-                            params.put("idToken", idToken);
-                            return params;
-                        }
+                         * @Override
+                         *           protected Map<String,String> getParams(){
+                         *           Map<String,String> params = new HashMap<String, String>();
+                         *           params.put("idToken", idToken);
+                         *           return params;
+                         *           }
                          */
 
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
-                            Map<String,String> params = new HashMap<String, String>();
-                            params.put("Content-Type","application/x-www-form-urlencoded");
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Content-Type", "application/x-www-form-urlencoded");
                             return params;
                         }
                     };
