@@ -37,6 +37,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "main-activity-tag";
+    private static final String SERVER_OAUTH_LOGIN_URL = "http://sajjad.hopto.org:8080/backend/api/google-oauth-login?idToken=";
     private GoogleSignInClient mGoogleSignInClient = null;
     private final Integer RC_SIGN_IN = 100;
     private SignInButton signInButton;
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 String personId = acct.getId();
                 String idToken = acct.getIdToken();
                 System.out.println(idToken);
-                sendIdTokenToBackendServer(idToken, personEmail);
+                sendIdTokenToBackendServer(idToken);
                 Uri personPhoto = acct.getPhotoUrl();
                 helloTextView.setText("Hello " + personName);
                 makeSignedInButtonState();
@@ -130,24 +131,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void sendIdTokenToBackendServer(final String idToken, final String email) {
+    private void sendIdTokenToBackendServer(final String idToken) {
         final Context context = getApplicationContext();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     RequestQueue queue = Volley.newRequestQueue(context);
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://sajjad.hopto.org:8080/backend/tokensignin/",
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, SERVER_OAUTH_LOGIN_URL + idToken,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    System.out.println(response);
                                     try {
                                         JSONObject jsonObject = new JSONObject(response);
-                                        String resIdToken = jsonObject.getString("idToken");
-                                        String resEmail = jsonObject.getString("email");
-                                        if (resEmail.equals(email)) {
-                                            Toast.makeText(context, "good result!", Toast.LENGTH_LONG).show();
+                                        String status = jsonObject.getString("status");
+                                        if (status.equals("OK")) {
+                                            String accessToken = jsonObject.getString("access_token");
+                                            Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -161,12 +163,16 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                     ) {
+                        /**
+                         * Work only when post method
+                         *
                         @Override
                         protected Map<String,String> getParams(){
                             Map<String,String> params = new HashMap<String, String>();
-                            params.put("idToken",idToken);
+                            params.put("idToken", idToken);
                             return params;
                         }
+                         */
 
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
