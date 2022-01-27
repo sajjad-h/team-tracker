@@ -3,11 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/319_Alif(27)/3-2/Android/Projects/team-tracker/TeamTracker/app/src/main/res/drawable/ic_back_img.xml" value="0.1287037037037037" />
-        <entry key="..\:/319_Alif(27)/3-2/Android/Projects/team-tracker/TeamTracker/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/319_Alif(27)/3-2/Android/Projects/team-tracker/TeamTracker/app/src/main/res/layout/activity_sign_in.xml" value="0.17097264437689969" />
-        <entry key="..\:/319_Alif(27)/3-2/Android/Projects/team-tracker/TeamTracker/app/src/main/res/layout/activity_sign_up.xml" value="0.1778115501519757" />
-        <entry key="..\:/Users/Lab1/Desktop/sajjad.h/projects/team-tracker/TeamTracker/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="https://github.com/alif-cse-ju/team-tracker/blob/main/TeamTracker/app/src/main/res/drawable/ic_back_img.xml" value="0.1287037037037037" />
+        <entry key="https://github.com/alif-cse-ju/team-tracker/blob/main/TeamTracker/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="https://github.com/alif-cse-ju/team-tracker/blob/main/TeamTracker/app/src/main/res/layout/activity_sign_in.xml" value="0.17097264437689969" />
+        <entry key="https://github.com/alif-cse-ju/team-tracker/blob/main/TeamTracker/app/src/main/res/layout/activity_sign_up.xml" value="0.1778115501519757" />
       </map>
     </option>
   </component>
