@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 makeSignedInButtonState();
                 Toast.makeText(this, "Successfully Signed In!", Toast.LENGTH_SHORT).show();
             }
-
         } catch (ApiException e) {
             Log.d(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                     ) {
                         /**
-                         * Work only when post method
+                         * Work only on POST method
                          *
                         @Override
                         protected Map<String,String> getParams(){

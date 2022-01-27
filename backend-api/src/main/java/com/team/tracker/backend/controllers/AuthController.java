@@ -12,14 +12,18 @@ import com.team.tracker.backend.services.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import io.jsonwebtoken.Claims;
@@ -68,21 +72,31 @@ public class AuthController {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(GOOGLE_OAUTH_TOKEN_INFO_URL + idTokenString,
                 String.class);
         JSONObject jsonObject = new JSONObject(responseEntity.getBody());
-        // TODO: database checkup is registered or not
-        String login = jsonObject.getString("email");
-        if (login != null && login.length() > 0) {
-            Claims claims = Jwts.claims().setSubject(login);
-            List<String> roles = new ArrayList<>();
-            roles.add("ROLE_USER");
-            claims.put("roles", roles);
-            String token = Jwts.builder().setClaims(claims)
-                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                    .signWith(SignatureAlgorithm.HS512, SECRET).compact();
-            response.put("access_token", TOKEN_PREFIX + token);
-            response.put("status", "OK");
-            return response;
+        String email = jsonObject.getString("email");
+        Optional<User> optionalUser = userService.findByEmail(email);
+        if (!optionalUser.isPresent()) {
+            String name = jsonObject.getString("name");
+            User user = new User(name, email, null);
+            userService.save(user);
         }
+        Claims claims = Jwts.claims().setSubject(email);
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+        claims.put("roles", roles);
+        String token = Jwts.builder().setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SECRET).compact();
+        response.put("access_token", TOKEN_PREFIX + token);
+        response.put("status", "OK");
+        return response;
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = { HttpClientErrorException.class })
+    HashMap<String, Object> handleMethodArgumentNotValid(HttpClientErrorException ex) {
+        HashMap<String, Object> response = new HashMap<>();
         response.put("status", "NOT_OK");
+        response.put("description", "this is not a valid token from google!");
         return response;
     }
 }

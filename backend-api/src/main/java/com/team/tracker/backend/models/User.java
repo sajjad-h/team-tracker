@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -27,14 +26,9 @@ public class User {
     private String name;
 
     @NotEmpty
-    private String username;
-
-    @NotEmpty
     @Email
     private String email;
 
-    @NotEmpty
-    @Size(min = 6)
     @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
 
@@ -64,14 +58,6 @@ public class User {
         this.name = name;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return this.email;
     }
@@ -86,5 +72,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public User orElseThrow(Object object) {
+        return null;
     }
 }
