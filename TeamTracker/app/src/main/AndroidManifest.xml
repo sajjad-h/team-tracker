@@ -16,11 +16,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SignUpActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="false" />
-        <activity
-            android:name=".SignInActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
@@ -28,6 +24,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
+        <activity
+            android:name=".SignInActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false">
         </activity>
     </application>
 </manifest>
