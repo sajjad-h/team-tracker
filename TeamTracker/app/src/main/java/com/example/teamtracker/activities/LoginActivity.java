@@ -1,16 +1,20 @@
-package com.example.teamtracker;
+package com.example.teamtracker.activities;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -20,13 +24,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.teamtracker.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
@@ -35,78 +38,56 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "main-activity-tag";
+public class LoginActivity extends AppCompatActivity {
+
+    private ImageButton googleLoginButton;
+    private static final String TAG = "login-activity-tag";
     private static final String SERVER_OAUTH_LOGIN_URL = "http://team-tracker.servehttp.com/api/google-oauth-login?idToken=";
-    private GoogleSignInClient mGoogleSignInClient = null;
-    private final Integer RC_SIGN_IN = 100;
-    private SignInButton signInButton;
-    private Button signOutButton;
-    private TextView helloTextView;
+    private ActivityResultLauncher<Intent> loginActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
+        loginActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                            handleLoginResult(task);
+                        }
+                    }
+                });
+
+        //To change status bar icon color
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
+        googleLoginButton = (ImageButton) findViewById(R.id.google_login_button);
+        googleLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
+    }
+
+    private void login() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        signInButton = findViewById(R.id.sign_in_button);
-        signOutButton = findViewById(R.id.sign_out_button);
-        helloTextView = (TextView) findViewById(R.id.helloText);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-        if (account == null) {
-            makeSignedOutButtonState();
-        } else {
-            makeSignedInButtonState();
-        }
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Intent loginIntent = mGoogleSignInClient.getSignInIntent();
+        loginActivityResultLauncher.launch(loginIntent);
     }
 
-    private void makeSignedInButtonState() {
-        signInButton.setVisibility(View.GONE);
-        signOutButton.setVisibility(View.VISIBLE);
-    }
-
-    private void makeSignedOutButtonState() {
-        signInButton.setVisibility(View.VISIBLE);
-        signOutButton.setVisibility(View.GONE);
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        handleSignOutResult();
-                    }
-                });
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    private void handleLoginResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
@@ -120,12 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(idToken);
                 sendIdTokenToBackendServer(idToken);
                 Uri personPhoto = acct.getPhotoUrl();
-                helloTextView.setText("Hello " + personName);
-                makeSignedInButtonState();
-                Toast.makeText(this, "Successfully Signed In!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, ProtectedActivity.class));
             }
         } catch (ApiException e) {
-            Log.d(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Log.d(TAG, "loginResult:failed code=" + e.getStatusCode());
         }
     }
 
@@ -176,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             Map<String, String> params = new HashMap<String, String>();
-                            params.put("Content-Type", "application/x-www-form-urlencoded");
+                            params.put("Content-Type", "application/json");
                             return params;
                         }
                     };
@@ -189,18 +169,8 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    private void handleSignOutResult() {
-        makeSignedOutButtonState();
-        Toast.makeText(this, "Successfully Signed Out!", Toast.LENGTH_SHORT).show();
-        helloTextView.setText("Hello World!");
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
+    public void onRegisterClick(View view) {
+        startActivity(new Intent(this, RegisterActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
     }
 }
