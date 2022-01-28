@@ -128,12 +128,12 @@ public class LoginActivity extends AppCompatActivity {
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
                                                 }
-                                                System.out.println(response);
                                             }
                                         },
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
+                                                Toast.makeText(context, "Wrong email/password!", Toast.LENGTH_LONG).show();
                                                 System.out.println(error);
                                             }
                                         }) {
@@ -202,7 +202,6 @@ public class LoginActivity extends AppCompatActivity {
                 String personEmail = acct.getEmail();
                 String personId = acct.getId();
                 String idToken = acct.getIdToken();
-                System.out.println(idToken);
                 sendIdTokenToBackendServer(idToken);
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
