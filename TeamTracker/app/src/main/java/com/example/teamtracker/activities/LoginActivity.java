@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         googleLoginButton = (ImageButton) findViewById(R.id.google_login_button);
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { haha
+            public void onClick(View view) {
                 login();
             }
         });
