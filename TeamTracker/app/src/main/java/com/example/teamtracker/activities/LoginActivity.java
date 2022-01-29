@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+        
         googleLoginButton = (ImageButton) findViewById(R.id.google_login_button);
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
