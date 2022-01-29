@@ -76,7 +76,7 @@ public class AuthController {
         Optional<User> optionalUser = userService.findByEmail(email);
         if (!optionalUser.isPresent()) {
             String name = jsonObject.getString("name");
-            User user = new User(name, email, null);
+            User user = new User(name, email, "");
             userService.save(user);
         }
         Claims claims = Jwts.claims().setSubject(email);
