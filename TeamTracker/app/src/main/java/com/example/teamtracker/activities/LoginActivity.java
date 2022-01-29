@@ -125,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG)
                                                             .show();
                                                     startActivity(new Intent(context, ProtectedActivity.class));
+                                                    finish();
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
                                                 }
@@ -206,6 +207,7 @@ public class LoginActivity extends AppCompatActivity {
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, ProtectedActivity.class));
+                finish();
             }
         } catch (ApiException e) {
             Log.d(TAG, "loginResult:failed code=" + e.getStatusCode());
@@ -275,5 +277,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onRegisterClick(View view) {
         startActivity(new Intent(this, RegisterActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
     }
 }

@@ -54,6 +54,7 @@ public class ProtectedActivity extends AppCompatActivity {
 
     private void handleLogoutResult() {
         Toast.makeText(this, "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
