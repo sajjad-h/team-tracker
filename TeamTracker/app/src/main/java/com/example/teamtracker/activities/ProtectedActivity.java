@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.teamtracker.R;
+import com.example.teamtracker.util.AuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -43,6 +44,7 @@ public class ProtectedActivity extends AppCompatActivity {
     }
 
     private void logout() {
+        AuthUtil.removeAccessToken(getApplicationContext());
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override

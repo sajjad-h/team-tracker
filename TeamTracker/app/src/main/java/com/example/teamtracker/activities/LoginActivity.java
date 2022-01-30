@@ -30,6 +30,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.teamtracker.R;
+import com.example.teamtracker.util.AuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -122,8 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 try {
                                                     JSONObject headersJsonObject = response.getJSONObject("headers");
                                                     String accessToken = headersJsonObject.getString("Authorization");
-                                                    Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG)
-                                                            .show();
+                                                    AuthUtil.storeAccessToken(context, accessToken);
                                                     startActivity(new Intent(context, ProtectedActivity.class));
                                                     finish();
                                                 } catch (JSONException e) {
@@ -231,8 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                                         String status = jsonObject.getString("status");
                                         if (status.equals("OK")) {
                                             String accessToken = jsonObject.getString("access_token");
-                                            Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG)
-                                                    .show();
+                                            AuthUtil.storeAccessToken(context, accessToken);
                                         } else {
                                             Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }
