@@ -128,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     if (status.equals("OK")) {
                                                         Toast.makeText(context, "Successfully Registered! Log in to continue.", Toast.LENGTH_LONG).show();
                                                         startActivity(new Intent(context, LoginActivity.class));
+                                                        finish();
                                                     } else {
                                                         String error = dataJsonObject.getString("error");
                                                         Toast.makeText(context, error, Toast.LENGTH_LONG).show();
@@ -212,6 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, ProtectedActivity.class));
+                finish();
             }
         } catch (ApiException e) {
             Log.d(TAG, "loginResult:failed code=" + e.getStatusCode());
@@ -288,6 +290,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void onLoginClick(View view) {
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
         overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }
