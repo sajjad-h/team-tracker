@@ -1,11 +1,5 @@
 package com.example.teamtracker.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -32,6 +32,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.teamtracker.R;
+import com.example.teamtracker.util.AuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,7 +40,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -128,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     if (status.equals("OK")) {
                                                         Toast.makeText(context, "Successfully Registered! Log in to continue.", Toast.LENGTH_LONG).show();
                                                         startActivity(new Intent(context, LoginActivity.class));
+                                                        finish();
                                                     } else {
                                                         String error = dataJsonObject.getString("error");
                                                         Toast.makeText(context, error, Toast.LENGTH_LONG).show();
@@ -212,6 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, ProtectedActivity.class));
+                finish();
             }
         } catch (ApiException e) {
             Log.d(TAG, "loginResult:failed code=" + e.getStatusCode());
@@ -235,8 +237,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         String status = jsonObject.getString("status");
                                         if (status.equals("OK")) {
                                             String accessToken = jsonObject.getString("access_token");
-                                            Toast.makeText(context, "access_token: " + accessToken, Toast.LENGTH_LONG)
-                                                    .show();
+                                            AuthUtil.storeAccessToken(context, accessToken);
                                         } else {
                                             Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }
@@ -288,6 +289,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void onLoginClick(View view) {
         startActivity(new Intent(this, LoginActivity.class));
+        finish();
         overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }
