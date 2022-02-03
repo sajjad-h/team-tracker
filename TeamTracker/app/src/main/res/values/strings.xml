@@ -5,4 +5,6 @@
     <string name="login_password_hint">Password</string>
     <string name="homeScreenTitle">Your Projects</string>
     <string name="project_name">First Project Name Which I Don\'t Know</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>
