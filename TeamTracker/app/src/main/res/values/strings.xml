@@ -3,4 +3,6 @@
     <string name="server_client_id">18461943134-qq3p3ula994j11rppvt1q5anu916gg6a.apps.googleusercontent.com</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
+    <string name="homeScreenTitle">Your Projects</string>
+    <string name="project_name">First Project Name Which I Don\'t Know</string>
 </resources>
