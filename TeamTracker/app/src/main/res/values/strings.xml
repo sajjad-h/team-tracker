@@ -7,4 +7,8 @@
     <string name="project_name">First Project Name Which I Don\'t Know</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_home">Home</string>
+    <string name="logout">Logout</string>
+    <string name="nav_demo">Demo Menu</string>
 </resources>
