@@ -2,81 +2,108 @@ package com.example.teamtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.teamtracker.R;
-import com.example.teamtracker.util.AdapterForHomeRecyclerView;
+import com.example.teamtracker.fragments.DemoFragment;
+import com.example.teamtracker.fragments.HomeFragment;
 import com.example.teamtracker.util.AuthUtil;
-import com.example.teamtracker.util.ModelClass;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class ProtectedActivity extends AppCompatActivity {
 
-    private Button logoutButton;
     private GoogleSignInClient mGoogleSignInClient;
-    RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
-    List<ModelClass> projectList;
-    AdapterForHomeRecyclerView adapter;
+    DrawerLayout drawer;
+    ActionBarDrawerToggle drawerToggle;
+    NavigationView navigation_view;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_protected);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+
+        navigation_view = findViewById(R.id.navigation_view);
+        navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item);
+                return true;
+            }
+        });
+
+        drawer = findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close);
+        drawer.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        Fragment fragment = new HomeFragment();
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        initData();
-        initRecyclerView();
+    }
 
-        logoutButton = (Button) findViewById(R.id.logout_button);
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    public void selectDrawerItem(MenuItem menuItem) {
+        Fragment fragment;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_demo:
+                fragment = new DemoFragment();
+                break;
+            case R.id.nav_logout:
                 logout();
-            }
-        });
+                return;
+            default:
+                fragment = new HomeFragment();
+        }
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        drawer.closeDrawers();
     }
 
-    private void initRecyclerView() {
-        recyclerView=findViewById(R.id.projectsRecyclerView);
-        layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter=new AdapterForHomeRecyclerView(projectList);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
-    private void initData() {
-        projectList = new ArrayList<>();
-
-        projectList.add(new ModelClass("University Management System"));
-        projectList.add(new ModelClass("Book Sharing Platform UI Design"));
-        projectList.add(new ModelClass("College Portal Development"));
-        projectList.add(new ModelClass("Library Management System UI Design"));
-        projectList.add(new ModelClass("Demo Facebook Clone App Project"));
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            drawer.openDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void logout() {
