@@ -31,6 +31,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.teamtracker.R;
 import com.example.teamtracker.util.AuthUtil;
+import com.example.teamtracker.util.SharedRefs;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -56,11 +58,14 @@ public class LoginActivity extends AppCompatActivity {
     private static final String SERVER_OAUTH_LOGIN_URL = "http://team-tracker.servehttp.com/api/google-oauth-login?idToken=";
     private static final String SERVER_LOGIN_URL = "http://team-tracker.servehttp.com/api/login";
     private ActivityResultLauncher<Intent> loginActivityResultLauncher;
+    private SharedRefs sharedRefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sharedRefs = new SharedRefs(getApplicationContext());
 
         loginActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -123,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 try {
                                                     JSONObject headersJsonObject = response.getJSONObject("headers");
                                                     String accessToken = headersJsonObject.getString("Authorization");
-                                                    AuthUtil.storeAccessToken(context, accessToken);
+                                                    sharedRefs.putString(sharedRefs.ACCESS_TOKEN, accessToken);
                                                     startActivity(new Intent(context, ProtectedActivity.class));
                                                     finish();
                                                 } catch (JSONException e) {
@@ -231,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                                         String status = jsonObject.getString("status");
                                         if (status.equals("OK")) {
                                             String accessToken = jsonObject.getString("access_token");
-                                            AuthUtil.storeAccessToken(context, accessToken);
+                                            sharedRefs.putString(sharedRefs.ACCESS_TOKEN, accessToken);
                                         } else {
                                             Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }

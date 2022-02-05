@@ -17,6 +17,7 @@ import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
 import com.example.teamtracker.util.AuthUtil;
+import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,12 +34,14 @@ public class ProtectedActivity extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
     NavigationView navigation_view;
     FragmentManager fragmentManager;
+    SharedRefs sharedRefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_protected);
 
+        sharedRefs = new SharedRefs(getApplicationContext());
         setSupportActionBar(findViewById(R.id.toolbar));
 
         navigation_view = findViewById(R.id.navigation_view);
@@ -107,7 +110,7 @@ public class ProtectedActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        AuthUtil.removeAccessToken(getApplicationContext());
+        sharedRefs.remove(sharedRefs.ACCESS_TOKEN);
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override

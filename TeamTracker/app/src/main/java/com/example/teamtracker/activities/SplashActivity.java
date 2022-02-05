@@ -8,9 +8,12 @@ import android.os.Handler;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.util.AuthUtil;
+import com.example.teamtracker.util.SharedRefs;
 
 public class SplashActivity extends AppCompatActivity {
     private Handler handler;
+    private AuthUtil authUtil;
+    private SharedRefs sharedRefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +21,13 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         handler = new Handler();
+        sharedRefs = new SharedRefs(getApplicationContext());
+        authUtil = new AuthUtil(getApplicationContext(), sharedRefs);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent = null;
-                if (AuthUtil.isLogin(getApplicationContext())) {
+                if (authUtil.isLogin()) {
                     intent = new Intent(getApplicationContext(), ProtectedActivity.class);
                 } else {
                     intent = new Intent(getApplicationContext(), LoginActivity.class);
