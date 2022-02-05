@@ -31,4 +31,8 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
+
+    // Room Database
+    implementation "androidx.room:room-runtime:2.4.1"
+    annotationProcessor "androidx.room:room-compiler:2.4.1"
 }

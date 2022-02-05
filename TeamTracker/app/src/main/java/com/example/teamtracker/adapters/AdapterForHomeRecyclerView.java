@@ -1,4 +1,4 @@
-package com.example.teamtracker.util;
+package com.example.teamtracker.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,18 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
+import com.example.teamtracker.models.Project;
 
 import java.util.List;
 
 public class AdapterForHomeRecyclerView extends RecyclerView.Adapter<AdapterForHomeRecyclerView.ViewHolderForHomeRecyclerView> {
-    private List<ModelClass> projectList;
-    public AdapterForHomeRecyclerView(List<ModelClass>projectList) {
+    private List<Project> projectList;
+    public AdapterForHomeRecyclerView(List<Project>projectList) {
         this.projectList=projectList;
     }
 
     @NonNull
     @Override
-    public AdapterForHomeRecyclerView.ViewHolderForHomeRecyclerView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolderForHomeRecyclerView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.project_list_item_layout,parent,false);
         return new ViewHolderForHomeRecyclerView(view);
     }
