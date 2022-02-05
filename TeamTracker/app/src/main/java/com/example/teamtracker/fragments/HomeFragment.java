@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -15,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
-import com.example.teamtracker.adapters.AdapterForHomeRecyclerView;
+import com.example.teamtracker.adapters.ProjectListAdapter;
 import com.example.teamtracker.database.RoomDB;
+import com.example.teamtracker.listeners.ProjectClickListener;
 import com.example.teamtracker.models.Project;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,7 +29,7 @@ public class HomeFragment extends Fragment {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     List<Project> projectList;
-    AdapterForHomeRecyclerView adapter;
+    ProjectListAdapter projectListAdapter;
     FloatingActionButton fabAddButton;
     RoomDB database;
 
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = RoomDB.getInstance(getContext());
+        projectList = database.projectDao().getAll();
     }
 
     @Override
@@ -53,8 +56,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initData();
-        initRecyclerView();
+        updateProjectsRecycler();
         fabAddButton = view.findViewById(R.id.fab_add_button);
         fabAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,20 +66,26 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void initRecyclerView() {
+    private final ProjectClickListener projectClickListener = new ProjectClickListener() {
+        @Override
+        public void onClick(Project project) {
+            Toast.makeText(getContext(), "selected: " + project.getProjectName(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onLongClick(Project project, TextView textView) {
+            Toast.makeText(getContext(), "long selected: " + project.getProjectName(), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void updateProjectsRecycler() {
         recyclerView = getView().findViewById(R.id.projectsRecyclerView);
         layoutManager = new LinearLayoutManager(getView().getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new AdapterForHomeRecyclerView(projectList);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-
-    private void initData() {
-        projectList = new ArrayList<>();
-        projectList = database.projectDao().getAll();
-        projectList.add(new Project("demo project showing"));
+        projectListAdapter = new ProjectListAdapter(getContext(), projectList, projectClickListener);
+        recyclerView.setAdapter(projectListAdapter);
+        projectListAdapter.notifyDataSetChanged();
     }
 
     private void showAddProjectDialog(Context context) {
@@ -94,7 +102,7 @@ public class HomeFragment extends Fragment {
                         database.projectDao().insert(project);
                         projectList.clear();
                         projectList.addAll(database.projectDao().getAll());
-                        adapter.notifyDataSetChanged();
+                        projectListAdapter.notifyDataSetChanged();
                         Toast.makeText(context, "Project Created Successfully!", Toast.LENGTH_SHORT).show();
                     }
                 })
