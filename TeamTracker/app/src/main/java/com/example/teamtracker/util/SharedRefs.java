@@ -9,6 +9,8 @@ public class SharedRefs {
     private Context context;
 
     public final String ACCESS_TOKEN = "access_token";
+    public final String USER_NAME = "user_name";
+    public final String USER_EMAIL = "user_email";
 
     public SharedRefs(Context context) {
         this.context = context;
@@ -20,7 +22,7 @@ public class SharedRefs {
     }
 
     public void putString(String key, String value) {
-        preferences.edit().putString(key, value);
+        preferences.edit().putString(key, value).commit();
     }
 
     public boolean has(String key) {
@@ -28,6 +30,6 @@ public class SharedRefs {
     }
 
     public void remove(String key) {
-        preferences.edit().remove(key);
+        preferences.edit().remove(key).commit();
     }
 }

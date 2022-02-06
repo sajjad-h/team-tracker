@@ -214,6 +214,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String personId = acct.getId();
                 String idToken = acct.getIdToken();
                 sendIdTokenToBackendServer(idToken);
+                sharedRefs.putString(sharedRefs.USER_NAME, personName);
+                sharedRefs.putString(sharedRefs.USER_EMAIL, personEmail);
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, ProtectedActivity.class));

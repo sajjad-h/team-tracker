@@ -3,6 +3,7 @@ package com.example.teamtracker.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,8 @@ public class ProtectedActivity extends AppCompatActivity {
     NavigationView navigation_view;
     FragmentManager fragmentManager;
     SharedRefs sharedRefs;
+    TextView userNameTextView;
+    TextView userEmailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,12 @@ public class ProtectedActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        userNameTextView = navigation_view.getHeaderView(0).findViewById(R.id.user_name);
+        userEmailTextView = navigation_view.getHeaderView(0).findViewById(R.id.user_email);
+
+        userNameTextView.setText(sharedRefs.getString(sharedRefs.USER_NAME, "user name not found"));
+        userEmailTextView.setText(sharedRefs.getString(sharedRefs.USER_EMAIL, "user email not found"));
 
         drawer = findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.open, R.string.close);
@@ -111,6 +120,8 @@ public class ProtectedActivity extends AppCompatActivity {
 
     private void logout() {
         sharedRefs.remove(sharedRefs.ACCESS_TOKEN);
+        sharedRefs.remove(sharedRefs.USER_NAME);
+        sharedRefs.remove(sharedRefs.USER_EMAIL);
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
