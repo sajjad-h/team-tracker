@@ -33,6 +33,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.teamtracker.R;
 import com.example.teamtracker.util.AuthUtil;
+import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -57,12 +58,15 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String SERVER_OAUTH_LOGIN_URL = "http://team-tracker.servehttp.com/api/google-oauth-login?idToken=";
     private static final String SERVER_REGISTER_URL = "http://team-tracker.servehttp.com/api/register";
     private ActivityResultLauncher<Intent> loginActivityResultLauncher;
+    private SharedRefs sharedRefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         changeStatusBarColor();
+
+        sharedRefs = new SharedRefs(getApplicationContext());
 
         loginActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -210,6 +214,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String personId = acct.getId();
                 String idToken = acct.getIdToken();
                 sendIdTokenToBackendServer(idToken);
+                sharedRefs.putString(sharedRefs.USER_NAME, personName);
+                sharedRefs.putString(sharedRefs.USER_EMAIL, personEmail);
                 Uri personPhoto = acct.getPhotoUrl();
                 Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, ProtectedActivity.class));
@@ -237,7 +243,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         String status = jsonObject.getString("status");
                                         if (status.equals("OK")) {
                                             String accessToken = jsonObject.getString("access_token");
-                                            AuthUtil.storeAccessToken(context, accessToken);
+                                            sharedRefs.putString(sharedRefs.ACCESS_TOKEN, accessToken);
                                         } else {
                                             Toast.makeText(context, "status: " + status, Toast.LENGTH_LONG).show();
                                         }
