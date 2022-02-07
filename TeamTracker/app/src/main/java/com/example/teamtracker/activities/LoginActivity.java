@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                     thread.start();
-                }
+                }afsdfasdfa
             }
         });
     }
