@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
-import com.example.teamtracker.util.AuthUtil;
 import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -100,8 +99,6 @@ public class ProtectedActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
