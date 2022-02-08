@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ public class TaskViewFragment extends Fragment {
     LinearLayoutManager layoutManager;
     List<Task> taskList = new ArrayList<>();
     TaskListAdapter taskListAdapter;
+    Button startTimerButton;
     private RoomDB database;
 
     public TaskViewFragment() {
@@ -36,16 +39,6 @@ public class TaskViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = RoomDB.getInstance(getContext());
-        Task task1 = new Task("Task1", "Implementing Task1");
-        Task task2 = new Task("Task2", "Implementing Task2");
-        Task task3 = new Task("Task3", "Implementing Task3");
-        Task task4 = new Task("Task4", "Implementing Task4");
-        Task task5 = new Task("Task5", "Implementing Task5");
-        Task task6 = new Task("Task6", "Implementing Task6");
-        database.taskDao().insert(task1);
-        database.taskDao().insert(task2);
-        database.taskDao().insert(task3);
-
         taskList = database.taskDao().getAll();
     }
 
@@ -58,6 +51,15 @@ public class TaskViewFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTasksRecycler();
+        startTimerButton = view.findViewById(R.id.startTimerButton);
+        startTimerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new TimerFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskViewTimer").commit();
+            }
+        });
     }
 
     private void updateTasksRecycler() {

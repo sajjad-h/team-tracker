@@ -18,7 +18,6 @@ import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
 
-import com.example.teamtracker.fragments.TimerFragment;
 import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -85,9 +84,6 @@ public class ProtectedActivity extends AppCompatActivity {
         switch (menuItem.getItemId()) {
             case R.id.nav_demo:
                 fragment = new DemoFragment();
-                break;
-            case R.id.nav_timer:
-                fragment = new TimerFragment();
                 break;
             case R.id.nav_logout:
                 logout();

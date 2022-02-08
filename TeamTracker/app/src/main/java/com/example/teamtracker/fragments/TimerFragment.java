@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -21,12 +22,16 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.teamtracker.R;
+import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
+import com.example.teamtracker.models.Task;
 
 public class TimerFragment extends Fragment {
 
     Chronometer chronometer;
     ToggleButton toggleButton;
+    private RoomDB database;
+
 
     public TimerFragment() {
         // Required empty public constructor
@@ -88,6 +93,12 @@ public class TimerFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
+                        Task task = new Task(String.valueOf(projectNameEditText.getText()),"");
+                        database = RoomDB.getInstance(getContext());
+                        database.taskDao().insert(task);
+                        Fragment fragment = new TaskViewFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -102,9 +113,10 @@ public class TimerFragment extends Fragment {
         long minute = duration/60; // calculating minute
         long sec =  duration%60; //calculating second
         // making the time string
-        if(hour!=0) time+= hour + "h ";
-        if(minute!=0) time+= minute + "m ";
-        if(sec!=0) time+= sec + "s";
+        if(hour != 0) time+= hour + "h ";
+        if(minute != 0) time+= minute + "m ";
+        if(sec != 0) time+= sec + "s";
+        else if(hour == 0 && sec == 0) time+= sec + "s";
         return time;
     }
 }
