@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
-import com.example.teamtracker.util.AuthUtil;
 import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -81,7 +80,7 @@ public class ProtectedActivity extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment;
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_demo:
                 fragment = new DemoFragment();
                 break;
@@ -102,8 +101,7 @@ public class ProtectedActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

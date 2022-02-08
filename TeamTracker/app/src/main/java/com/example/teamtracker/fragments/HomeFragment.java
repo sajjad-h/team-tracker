@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +23,6 @@ import com.example.teamtracker.listeners.ProjectClickListener;
 import com.example.teamtracker.models.Project;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -69,7 +69,9 @@ public class HomeFragment extends Fragment {
     private final ProjectClickListener projectClickListener = new ProjectClickListener() {
         @Override
         public void onClick(Project project) {
-            Toast.makeText(getContext(), "selected: " + project.getProjectName(), Toast.LENGTH_SHORT).show();
+            Fragment fragment = new TaskViewFragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskView").commit();
         }
 
         @Override

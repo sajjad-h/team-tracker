@@ -7,9 +7,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.teamtracker.database.dao.ProjectDao;
+import com.example.teamtracker.database.dao.TaskDao;
 import com.example.teamtracker.models.Project;
+import com.example.teamtracker.models.Task;
 
-@Database(entities = Project.class, version = 1, exportSchema = false)
+@Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB database;
     private static String DATABASE_NAME ="team_tracker_app";
@@ -26,4 +28,5 @@ public abstract class RoomDB extends RoomDatabase {
     }
 
     public abstract ProjectDao projectDao();
+    public abstract TaskDao taskDao();
 }
