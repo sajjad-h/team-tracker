@@ -20,19 +20,19 @@ public class Task {
         this.description = description;
     }
 
-    public String getTaskTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public String getTaskDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setTaskTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setTaskDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 }

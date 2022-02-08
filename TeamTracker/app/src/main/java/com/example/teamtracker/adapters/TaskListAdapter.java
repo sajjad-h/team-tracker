@@ -55,7 +55,7 @@ class TaskListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(Task task) {
-        titleTV.setText(task.getTaskTitle());
-        descriptionTV.setText(task.getTaskDescription());
+        titleTV.setText(task.getTitle());
+        descriptionTV.setText(task.getDescription());
     }
 }

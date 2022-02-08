@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.adapters.TaskListAdapter;
+import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Task;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class TaskViewFragment extends Fragment {
     LinearLayoutManager layoutManager;
     List<Task> taskList = new ArrayList<>();
     TaskListAdapter taskListAdapter;
+    private RoomDB database;
 
     public TaskViewFragment() {
     }
@@ -33,19 +35,18 @@ public class TaskViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database = RoomDB.getInstance(getContext());
         Task task1 = new Task("Task1", "Implementing Task1");
         Task task2 = new Task("Task2", "Implementing Task2");
         Task task3 = new Task("Task3", "Implementing Task3");
         Task task4 = new Task("Task4", "Implementing Task4");
         Task task5 = new Task("Task5", "Implementing Task5");
         Task task6 = new Task("Task6", "Implementing Task6");
+        database.taskDao().insert(task1);
+        database.taskDao().insert(task2);
+        database.taskDao().insert(task3);
 
-        taskList.add(0, task1);
-        taskList.add(1, task2);
-        taskList.add(2, task3);
-        taskList.add(3, task4);
-        taskList.add(4, task5);
-        taskList.add(5, task6);
+        taskList = database.taskDao().getAll();
     }
 
     @Override
