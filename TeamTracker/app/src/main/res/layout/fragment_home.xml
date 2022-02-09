@@ -17,11 +17,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:text="Current Projects"
             android:textColor="@color/black"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/projectsRecyclerView"
@@ -39,6 +40,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="32dp"
+            android:backgroundTint="@color/colorPrimary"
             android:src="@drawable/ic_baseline_add" />
     </RelativeLayout>
 
