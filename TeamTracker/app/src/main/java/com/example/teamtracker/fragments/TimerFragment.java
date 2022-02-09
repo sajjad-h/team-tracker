@@ -31,14 +31,14 @@ public class TimerFragment extends Fragment {
     private Chronometer chronometer;
     private ToggleButton toggleButton;
     private RoomDB database;
+    private Project project;
 
-
-    public TimerFragment() {
-        // Required empty public constructor
+    public TimerFragment(Project project) {
+        this.project = project;
     }
 
-    public static TimerFragment newInstance(String param1, String param2) {
-        TimerFragment fragment = new TimerFragment();
+    public static TimerFragment newInstance(Project project) {
+        TimerFragment fragment = new TimerFragment(project);
         return fragment;
     }
 
@@ -88,10 +88,10 @@ public class TimerFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
-                        Task task = new Task(String.valueOf(taskNameEditText.getText()),"");
+                        Task task = new Task(String.valueOf(taskNameEditText.getText()),"", String.valueOf(project.getId()));
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
-                        Fragment fragment = new TaskViewFragment();
+                        Fragment fragment = new TaskViewFragment(project);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     }

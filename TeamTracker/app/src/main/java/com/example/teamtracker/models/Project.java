@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "projects")
 public class Project {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "project_id")
     public int id;
 
     @ColumnInfo(name = "name")
@@ -14,6 +15,14 @@ public class Project {
 
     public Project(String projectName) {
         this.projectName = projectName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getProjectName() {

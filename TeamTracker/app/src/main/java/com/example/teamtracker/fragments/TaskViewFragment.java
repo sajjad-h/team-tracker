@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.teamtracker.R;
 import com.example.teamtracker.adapters.TaskListAdapter;
 import com.example.teamtracker.database.RoomDB;
+import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
 
 import java.util.ArrayList;
@@ -26,12 +27,14 @@ public class TaskViewFragment extends Fragment {
     TaskListAdapter taskListAdapter;
     Button startTimerButton;
     private RoomDB database;
+    private Project project;
 
-    public TaskViewFragment() {
+    public TaskViewFragment(Project project) {
+        this.project = project;
     }
 
-    public static TaskViewFragment newInstance() {
-        TaskViewFragment fragment = new TaskViewFragment();
+    public static TaskViewFragment newInstance(Project project) {
+        TaskViewFragment fragment = new TaskViewFragment(project);
         return fragment;
     }
 
@@ -39,7 +42,7 @@ public class TaskViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = RoomDB.getInstance(getContext());
-        taskList = database.taskDao().getAll();
+        taskList = database.taskDao().findTaskByProjectId(project.getId());
     }
 
     @Override
@@ -55,7 +58,7 @@ public class TaskViewFragment extends Fragment {
         startTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new TimerFragment();
+                Fragment fragment = new TimerFragment(project);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskViewTimer").commit();
             }

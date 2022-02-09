@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
     private final ProjectClickListener projectClickListener = new ProjectClickListener() {
         @Override
         public void onClick(Project project) {
-            Fragment fragment = new TaskViewFragment();
+            Fragment fragment = new TaskViewFragment(project);
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskView").commit();
         }
