@@ -11,5 +11,4 @@
     <string name="nav_home">Home</string>
     <string name="logout">Logout</string>
     <string name="nav_demo">Demo Menu</string>
-    <string name="nav_timer">Timer</string>
 </resources>

@@ -27,9 +27,9 @@ import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
 
 public class TimerFragment extends Fragment {
-
-    Chronometer chronometer;
-    ToggleButton toggleButton;
+    private static final int SECONDS_IN_MINUTE = 60,MINUTES_IN_HOUR=60,MILLI=1000;
+    private Chronometer chronometer;
+    private ToggleButton toggleButton;
     private RoomDB database;
 
 
@@ -48,8 +48,7 @@ public class TimerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_timer, container, false);
     }
@@ -65,25 +64,21 @@ public class TimerFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isRunning) {
                 System.out.println(isRunning);
                 if(isRunning){
-
                     chronometer.stop();
-                    long duration = SystemClock.elapsedRealtime() - chronometer.getBase();
+                    Long duration = SystemClock.elapsedRealtime() - chronometer.getBase();
                     System.out.println(duration);
                     showAddTaskDialog(getContext(),duration);
                     chronometer.setBase(SystemClock.elapsedRealtime());
-
                 }else {
-
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
-
                 }
 
             }
         });
     }
 
-    private void showAddTaskDialog(Context context,long duration) {
+    private void showAddTaskDialog(Context context, Long duration) {
         final EditText projectNameEditText = new EditText(context);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Hey you've worked for "+formatDuration(duration)+" !!")
@@ -105,13 +100,13 @@ public class TimerFragment extends Fragment {
                 .create();
         dialog.show();
     }
-    private String formatDuration(long duration){
+    private String formatDuration(Long duration){
         String time = "";
-        duration/=1000; // converting millisecond to second
-        long hour = duration/(60*60); // calculating hour
-        duration%=(60*60); // remaining seconds
-        long minute = duration/60; // calculating minute
-        long sec =  duration%60; //calculating second
+        duration/=MILLI; // converting millisecond to second
+        Long hour = duration/(SECONDS_IN_MINUTE*MINUTES_IN_HOUR); // calculating hour
+        duration%=(SECONDS_IN_MINUTE*MINUTES_IN_HOUR); // remaining seconds
+        Long minute = duration/SECONDS_IN_MINUTE; // calculating minute
+        Long sec =  duration%SECONDS_IN_MINUTE; //calculating second
         // making the time string
         if(hour != 0) time+= hour + "h ";
         if(minute != 0) time+= minute + "m ";
