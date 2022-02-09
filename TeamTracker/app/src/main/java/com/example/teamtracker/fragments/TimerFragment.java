@@ -79,16 +79,16 @@ public class TimerFragment extends Fragment {
     }
 
     private void showAddTaskDialog(Context context, Long duration) {
-        final EditText projectNameEditText = new EditText(context);
+        final EditText taskNameEditText = new EditText(context);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Hey you've worked for "+formatDuration(duration)+" !!")
                 .setMessage("What were you doing?")
-                .setView(projectNameEditText)
+                .setView(taskNameEditText)
                 .setPositiveButton("Add Task", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
-                        Task task = new Task(String.valueOf(projectNameEditText.getText()),"");
+                        Task task = new Task(String.valueOf(taskNameEditText.getText()),"");
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
                         Fragment fragment = new TaskViewFragment();
