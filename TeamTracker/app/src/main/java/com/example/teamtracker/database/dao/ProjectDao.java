@@ -16,11 +16,11 @@ public interface ProjectDao {
     @Insert(onConflict = REPLACE)
     void insert(Project project);
 
-    @Query("SELECT * FROM projects ORDER BY id DESC")
+    @Query("SELECT * FROM projects ORDER BY project_id DESC")
     List<Project> getAll();
 
-    @Query("UPDATE projects SET name = :name WHERE id = :id")
-    void update(int id, String name);
+    @Query("UPDATE projects SET name = :name WHERE project_id = :projectId")
+    void update(int projectId, String name);
 
     @Delete
     void delete(Project note);
