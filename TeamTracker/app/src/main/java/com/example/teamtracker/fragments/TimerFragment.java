@@ -89,9 +89,6 @@ public class TimerFragment extends Fragment {
                         Task task = new Task(String.valueOf(taskNameEditText.getText()),"", String.valueOf(project.getId()));
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
-                        Fragment fragment = new ProjectFragment(project);
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     }
                 })
                 .setNegativeButton("Cancel", null)
