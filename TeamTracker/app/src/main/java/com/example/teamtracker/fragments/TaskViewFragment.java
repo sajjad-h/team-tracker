@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,7 +24,6 @@ public class TaskViewFragment extends Fragment {
     LinearLayoutManager layoutManager;
     List<Task> taskList = new ArrayList<>();
     TaskListAdapter taskListAdapter;
-    Button startTimerButton;
     private RoomDB database;
     private Project project;
 
@@ -54,15 +52,9 @@ public class TaskViewFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTasksRecycler();
-        startTimerButton = view.findViewById(R.id.startTimerButton);
-        startTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new TimerFragment(project);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskViewTimer").commit();
-            }
-        });
+        Fragment fragment = new TimerFragment(project);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.timer_fragment_container, fragment).addToBackStack("TimerFragment").commit();
     }
 
     private void updateTasksRecycler() {

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
     tools:context=".fragments.TaskViewFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -12,15 +13,12 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/startTimerButton"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/timer_fragment_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Timer"
-            android:textSize="20sp"
-            android:textColor="@android:color/background_dark"
-            android:background="#FF9F45"
-            android:layout_margin="10dp"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tasksRecyclerView"
