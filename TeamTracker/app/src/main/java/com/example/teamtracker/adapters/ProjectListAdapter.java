@@ -68,6 +68,6 @@ class ProjectListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(Project project) {
-        tv.setText(project.getProjectName());
+        tv.setText(project.getName());
     }
 }

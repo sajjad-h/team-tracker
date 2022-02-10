@@ -11,10 +11,10 @@ public class Project {
     public int id;
 
     @ColumnInfo(name = "name")
-    private String projectName;
+    private String name;
 
-    public Project(String projectName) {
-        this.projectName = projectName;
+    public Project(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -25,11 +25,11 @@ public class Project {
         this.id = id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getName() {
+        return name;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

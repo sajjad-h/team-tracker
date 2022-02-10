@@ -7,26 +7,11 @@
     android:background="@color/colorWhite"
     tools:context=".fragments.TaskViewFragment">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <FrameLayout
-            android:id="@+id/timer_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </FrameLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasksRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:nestedScrollingEnabled="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </FrameLayout>

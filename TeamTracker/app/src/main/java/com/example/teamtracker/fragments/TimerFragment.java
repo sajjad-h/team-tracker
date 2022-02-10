@@ -3,7 +3,6 @@ package com.example.teamtracker.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -73,7 +72,6 @@ public class TimerFragment extends Fragment {
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
                 }
-
             }
         });
     }
@@ -91,7 +89,7 @@ public class TimerFragment extends Fragment {
                         Task task = new Task(String.valueOf(taskNameEditText.getText()),"", String.valueOf(project.getId()));
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
-                        Fragment fragment = new TaskViewFragment(project);
+                        Fragment fragment = new ProjectFragment(project);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     }

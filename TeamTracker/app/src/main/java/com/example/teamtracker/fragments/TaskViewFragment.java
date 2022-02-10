@@ -52,9 +52,6 @@ public class TaskViewFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTasksRecycler();
-        Fragment fragment = new TimerFragment(project);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.timer_fragment_container, fragment).addToBackStack("TimerFragment").commit();
     }
 
     private void updateTasksRecycler() {
