@@ -111,5 +111,6 @@ public class HomeFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_menu_colored_rectangle);
     }
 }

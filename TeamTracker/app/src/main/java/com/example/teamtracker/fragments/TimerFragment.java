@@ -31,6 +31,7 @@ public class TimerFragment extends Fragment {
     private ToggleButton toggleButton;
     private RoomDB database;
     private Project project;
+    private EditText taskTitle,taskDescription;
 
     public TimerFragment(Project project) {
         this.project = project;
@@ -61,11 +62,9 @@ public class TimerFragment extends Fragment {
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isRunning) {
-                System.out.println(isRunning);
                 if(isRunning){
                     chronometer.stop();
                     Long duration = SystemClock.elapsedRealtime() - chronometer.getBase();
-                    System.out.println(duration);
                     showAddTaskDialog(getContext(),duration);
                     chronometer.setBase(SystemClock.elapsedRealtime());
                 }else {
@@ -77,23 +76,26 @@ public class TimerFragment extends Fragment {
     }
 
     private void showAddTaskDialog(Context context, Long duration) {
-        final EditText taskNameEditText = new EditText(context);
+        final View customLayout = getLayoutInflater().inflate(R.layout.custom_add_task_alert_dialog, null);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Hey you've worked for "+formatDuration(duration)+" !!")
                 .setMessage("What were you doing?")
-                .setView(taskNameEditText)
+                .setView(customLayout)
                 .setPositiveButton("Add Task", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
-                        Task task = new Task(String.valueOf(taskNameEditText.getText()),"", String.valueOf(project.getId()));
+                        taskTitle = customLayout.findViewById(R.id.task_Title);
+                        taskDescription = customLayout.findViewById(R.id.task_Description);
+                        Task task = new Task(String.valueOf(taskTitle.getText()),String.valueOf(taskDescription.getText()), String.valueOf(project.getId()));
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
+                        Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_menu_colored_rectangle);
     }
     private String formatDuration(Long duration){
         String time = "";
