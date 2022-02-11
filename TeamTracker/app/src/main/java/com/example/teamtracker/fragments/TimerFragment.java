@@ -31,7 +31,6 @@ public class TimerFragment extends Fragment {
     private ToggleButton toggleButton;
     private RoomDB database;
     private Project project;
-    private EditText taskTitle,taskDescription;
 
     public TimerFragment(Project project) {
         this.project = project;
@@ -76,17 +75,20 @@ public class TimerFragment extends Fragment {
     }
 
     private void showAddTaskDialog(Context context, Long duration) {
-        final View customLayout = getLayoutInflater().inflate(R.layout.custom_add_task_alert_dialog, null);
+        final View addTaskCustomLayout = getLayoutInflater().inflate(R.layout.custom_add_task_alert_dialog, null);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Hey you've worked for "+formatDuration(duration)+" !!")
                 .setMessage("What were you doing?")
-                .setView(customLayout)
+                .setView(addTaskCustomLayout)
                 .setPositiveButton("Add Task", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        taskTitle = customLayout.findViewById(R.id.task_Title);
-                        taskDescription = customLayout.findViewById(R.id.task_Description);
-                        Task task = new Task(String.valueOf(taskTitle.getText()),String.valueOf(taskDescription.getText()), String.valueOf(project.getId()));
+                        EditText taskTitle, taskDescription;
+                        taskTitle = addTaskCustomLayout.findViewById(R.id.task_Title);
+                        taskDescription = addTaskCustomLayout.findViewById(R.id.task_Description);
+                        String tempTaskTitle = String.valueOf(taskTitle.getText());
+                        String tempTaskDescription = String.valueOf(taskDescription.getText());
+                        Task task = new Task(tempTaskTitle, tempTaskDescription, String.valueOf(project.getId()));
                         database = RoomDB.getInstance(getContext());
                         database.taskDao().insert(task);
                         Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
