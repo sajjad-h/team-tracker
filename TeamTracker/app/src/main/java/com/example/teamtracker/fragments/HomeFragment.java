@@ -69,14 +69,14 @@ public class HomeFragment extends Fragment {
     private final ProjectClickListener projectClickListener = new ProjectClickListener() {
         @Override
         public void onClick(Project project) {
-            Fragment fragment = new TaskViewFragment(project);
+            Fragment fragment = new ProjectFragment(project);
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("TaskView").commit();
         }
 
         @Override
         public void onLongClick(Project project, TextView textView) {
-            Toast.makeText(getContext(), "long selected: " + project.getProjectName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "long selected: " + project.getName(), Toast.LENGTH_SHORT).show();
         }
     };
 
