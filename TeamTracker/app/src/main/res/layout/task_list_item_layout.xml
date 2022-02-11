@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/taskListCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:backgroundTint="#FF9F45">
+        android:backgroundTint="@color/colorPrimary"
+        app:cardCornerRadius="8dp">
 
         <LinearLayout
                 android:layout_width="wrap_content"
@@ -21,7 +23,8 @@
                     style="@style/TextAppearance.MaterialComponents.Headline5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Title"/>
+                    android:text="Title"
+                    android:textColor="@color/contentTextColor"/>
 
                 <TextView
                     android:id="@+id/taskDescriptionTextView"
@@ -32,7 +35,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginRight="8dp"
-                    android:textColor="@android:color/background_dark"/>
+                    android:textColor="@color/contentTextColor"/>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
