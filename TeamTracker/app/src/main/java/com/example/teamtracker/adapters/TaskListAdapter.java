@@ -1,6 +1,5 @@
 package com.example.teamtracker.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
-import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,16 +55,19 @@ public class TaskListAdapter extends ListAdapter<Task, TaskListViewHolder> {
 
 class TaskListViewHolder extends RecyclerView.ViewHolder {
     public CardView card;
-    public TextView titleTV, descriptionTV;
+    public TextView dateTV, timeTV, titleTV;
+
     public TaskListViewHolder(@NonNull View itemView) {
         super(itemView);
         card = itemView.findViewById(R.id.taskListCardView);
+        dateTV = itemView.findViewById(R.id.dateTextView);
+        timeTV = itemView.findViewById(R.id.timeTextView);
         titleTV = itemView.findViewById(R.id.taskTitleTextView);
-        descriptionTV = itemView.findViewById(R.id.taskDescriptionTextView);
     }
 
     public void setData(Task task) {
+        dateTV.setText(task.getDate());
+        timeTV.setText(task.getTime());
         titleTV.setText(task.getTitle());
-        descriptionTV.setText(task.getDescription());
     }
 }
