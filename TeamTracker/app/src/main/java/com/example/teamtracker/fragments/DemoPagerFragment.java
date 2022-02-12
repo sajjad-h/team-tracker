@@ -1,4 +1,4 @@
-package com.example.teamtracker;
+package com.example.teamtracker.fragments;
 
 import android.os.Bundle;
 
@@ -12,18 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.teamtracker.adapters.PracticePagerAdapter;
+import com.example.teamtracker.R;
+import com.example.teamtracker.adapters.DemoPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class PracticeFragment extends Fragment {
+public class DemoPagerFragment extends Fragment {
 
-    public PracticeFragment() {
+    public DemoPagerFragment() {
         // Required empty public constructor
     }
 
-    public static PracticeFragment newInstance() {
-        PracticeFragment fragment = new PracticeFragment();
+    public static DemoPagerFragment newInstance() {
+        DemoPagerFragment fragment = new DemoPagerFragment();
         return fragment;
     }
 
@@ -35,16 +36,16 @@ public class PracticeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_practice, container, false);
+        return inflater.inflate(R.layout.fragment_demo_pager, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewPager2 vpPager = (ViewPager2) view.findViewById(R.id.vpPager);
-        PracticePagerAdapter adapterViewPager = new PracticePagerAdapter(getChildFragmentManager(), getLifecycle());
-        vpPager.setAdapter(adapterViewPager);
+        ViewPager2 demoPager = view.findViewById(R.id.demo_pager);
+        DemoPagerAdapter adapterDemoPager = new DemoPagerAdapter(getChildFragmentManager(), getLifecycle());
+        demoPager.setAdapter(adapterDemoPager);
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("First"));
@@ -54,7 +55,7 @@ public class PracticeFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                vpPager.setCurrentItem(tab.getPosition());
+                demoPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -68,23 +69,10 @@ public class PracticeFragment extends Fragment {
             }
         });
 
-        vpPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        demoPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
-            }
-        });
-
-        // Attach the page change listener inside the activity
-        vpPager.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(View view) {
-                Toast.makeText(getContext(), view.getId() + " attached!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(View view) {
-                Toast.makeText(getContext(), view.getId() + " detached!", Toast.LENGTH_SHORT).show();
             }
         });
     }

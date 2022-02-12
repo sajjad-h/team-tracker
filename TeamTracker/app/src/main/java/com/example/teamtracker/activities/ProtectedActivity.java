@@ -14,7 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.teamtracker.PracticeFragment;
+import com.example.teamtracker.fragments.DemoPagerFragment;
 import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
@@ -83,8 +83,8 @@ public class ProtectedActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment;
         switch (menuItem.getItemId()) {
-            case R.id.nav_practice:
-                fragment = new PracticeFragment();
+            case R.id.nav_demo_pager: // It is a demo pager (it is here just for learning purpose)
+                fragment = new DemoPagerFragment();
                 break;
             case R.id.nav_demo:
                 fragment = DemoFragment.newInstance("Demo Fragment");

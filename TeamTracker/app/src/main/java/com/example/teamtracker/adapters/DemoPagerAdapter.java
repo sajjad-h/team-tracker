@@ -8,10 +8,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.teamtracker.fragments.DemoFragment;
 
-public class PracticePagerAdapter extends FragmentStateAdapter {
+public class DemoPagerAdapter extends FragmentStateAdapter {
     private static int NUM_ITEMS = 3;
 
-    public PracticePagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    public DemoPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 
