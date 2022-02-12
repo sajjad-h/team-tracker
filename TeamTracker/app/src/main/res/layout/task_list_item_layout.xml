@@ -42,7 +42,7 @@
                             android:src="@drawable/ic_baseline_timer_24"/>
 
                         <TextView
-                            android:id="@+id/timeTextView"
+                            android:id="@+id/durationTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@null"
@@ -64,7 +64,7 @@
                             android:src="@drawable/ic_baseline_create_24"/>
 
                         <TextView
-                            android:id="@+id/dateTextView"
+                            android:id="@+id/startTimeTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@null"

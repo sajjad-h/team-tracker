@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.models.Task;
+import com.example.teamtracker.util.DateTimeUtil;
 
 import java.util.List;
 
@@ -55,19 +56,19 @@ public class TaskListAdapter extends ListAdapter<Task, TaskListViewHolder> {
 
 class TaskListViewHolder extends RecyclerView.ViewHolder {
     public CardView card;
-    public TextView dateTV, timeTV, titleTV;
+    public TextView startTimeTV, durationTV, titleTV;
 
     public TaskListViewHolder(@NonNull View itemView) {
         super(itemView);
         card = itemView.findViewById(R.id.taskListCardView);
-        dateTV = itemView.findViewById(R.id.dateTextView);
-        timeTV = itemView.findViewById(R.id.timeTextView);
+        startTimeTV = itemView.findViewById(R.id.startTimeTextView);
+        durationTV = itemView.findViewById(R.id.durationTextView);
         titleTV = itemView.findViewById(R.id.taskTitleTextView);
     }
 
     public void setData(Task task) {
-        dateTV.setText(task.getDate());
-        timeTV.setText(task.getTime());
+        startTimeTV.setText(DateTimeUtil.getDateFromEpoch(task.getStartTime()));
+        durationTV.setText(DateTimeUtil.milliSecondToTimeFormat(task.getDuration()));
         titleTV.setText(task.getTitle());
     }
 }

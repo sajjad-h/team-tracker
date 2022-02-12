@@ -26,17 +26,18 @@ import com.example.teamtracker.R;
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
+import com.example.teamtracker.util.DateTimeUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimerFragment extends Fragment {
-    private static final int SECONDS_IN_MINUTE = 60, MINUTES_IN_HOUR = 60, MILLI = 1000;
     private Chronometer chronometer;
     private ToggleButton toggleButton;
     private RoomDB database;
     private Project project;
+    private Long startTime;
 
     public TimerFragment(Project project) {
         this.project = project;
@@ -75,13 +76,14 @@ public class TimerFragment extends Fragment {
                 } else {
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
+                    startTime = System.currentTimeMillis();
                 }
             }
         });
     }
 
     private void showAddTaskDialog(Context context, Long duration) {
-        String time = formatDuration(duration);
+        String time = DateTimeUtil.milliSecondToTimeFormat(duration);
         final View addTaskCustomLayout = getLayoutInflater().inflate(R.layout.custom_add_task_alert_dialog, null);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Hey you've worked for " + time + " !!")
@@ -102,7 +104,6 @@ public class TimerFragment extends Fragment {
                     public void onClick(View view) {
                         EditText edtTaskTitle = addTaskCustomLayout.findViewById(R.id.task_Title);
                         EditText edtTaskDescription = addTaskCustomLayout.findViewById(R.id.task_Description);
-                        String date = GetDate();
                         String taskTitle = String.valueOf(edtTaskTitle.getText());
                         String taskDescription = String.valueOf(edtTaskDescription.getText());
                         if (TextUtils.isEmpty(taskTitle)) {
@@ -110,7 +111,7 @@ public class TimerFragment extends Fragment {
                         } else if (TextUtils.isEmpty(taskDescription)) {
                             edtTaskDescription.setError("Description can't be empty.");
                         } else {
-                            Task task = new Task(taskTitle, taskDescription, date, time, String.valueOf(project.getId()));
+                            Task task = new Task(taskTitle, taskDescription, startTime, duration, String.valueOf(project.getId()));
                             database = RoomDB.getInstance(getContext());
                             database.taskDao().insert(task);
                             Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
@@ -122,27 +123,5 @@ public class TimerFragment extends Fragment {
         });
         dialog.show();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_menu_colored_rectangle);
-    }
-
-    private String formatDuration(Long duration) {
-        String time = "";
-        duration /= MILLI; // converting millisecond to second
-        Long hour = duration / (SECONDS_IN_MINUTE * MINUTES_IN_HOUR); // calculating hour
-        duration %= (SECONDS_IN_MINUTE * MINUTES_IN_HOUR); // remaining seconds
-        Long minute = duration / SECONDS_IN_MINUTE; // calculating minute
-        Long sec = duration % SECONDS_IN_MINUTE; //calculating second
-        // making the time string
-        if (hour != 0) time += hour + "h ";
-        if (minute != 0) time += minute + "m ";
-        if (sec != 0) time += sec + "s";
-        else if (hour == 0 && sec == 0) time += sec + "s";
-        return time;
-    }
-
-    private String GetDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMM, yyyy");
-        Date date = new Date(System.currentTimeMillis());
-        String currentDate = dateFormat.format(date);
-        return currentDate;
     }
 }

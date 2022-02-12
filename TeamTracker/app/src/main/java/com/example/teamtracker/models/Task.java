@@ -16,14 +16,14 @@ public class Task {
     @ColumnInfo(name = "task_id")
     public int id;
 
-    @ColumnInfo(name = "date")
-    private String date;
+    @ColumnInfo(name = "start_time")
+    private Long startTime;
 
     @ColumnInfo(name = "description")
     private String description;
 
-    @ColumnInfo(name = "time")
-    private String time;
+    @ColumnInfo(name = "duration")
+    private Long duration;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -31,10 +31,10 @@ public class Task {
     @ColumnInfo(name = "project_id")
     public String projectId;
 
-    public Task(String title, String description, String date, String time, String projectId) {
+    public Task(String title, String description, Long startTime, Long duration, String projectId) {
         this.title = title;
-        this.time = time;
-        this.date = date;
+        this.startTime = startTime;
+        this.duration = duration;
         this.description = description;
         this.projectId = projectId;
     }
@@ -47,20 +47,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
     public String getDescription() {
@@ -71,19 +63,27 @@ public class Task {
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
+    public Long getDuration() {
+        return duration;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
-    public String getTime() {
-        return time;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }
