@@ -1,12 +1,16 @@
 package com.example.teamtracker.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +19,7 @@ import com.example.teamtracker.adapters.TaskListAdapter;
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
+import com.example.teamtracker.viewmodels.TaskViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +27,9 @@ import java.util.List;
 public class TaskViewFragment extends Fragment {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    List<Task> taskList = new ArrayList<>();
     TaskListAdapter taskListAdapter;
-    private RoomDB database;
     private Project project;
+    private TaskViewModel taskViewModel;
 
     public TaskViewFragment(Project project) {
         this.project = project;
@@ -39,8 +43,21 @@ public class TaskViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = RoomDB.getInstance(getContext());
-        taskList = database.taskDao().findTaskByProjectId(project.getId());
+
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        taskViewModel.getAllTasksByProjectId(project.getId()).observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                taskListAdapter.submitList(tasks);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.smoothScrollToPosition(0);
+                    }
+                }, 500);
+            }
+        });
     }
 
     @Override
@@ -59,9 +76,8 @@ public class TaskViewFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getView().getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        taskListAdapter = new TaskListAdapter(getContext(), taskList);
+        taskListAdapter = new TaskListAdapter();
         recyclerView.setAdapter(taskListAdapter);
-        taskListAdapter.notifyDataSetChanged();
     }
 
 }
