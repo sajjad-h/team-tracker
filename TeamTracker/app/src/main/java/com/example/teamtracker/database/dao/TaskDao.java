@@ -1,9 +1,11 @@
 package com.example.teamtracker.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.teamtracker.models.Task;
 
@@ -17,13 +19,13 @@ public interface TaskDao {
     void insert(Task task);
 
     @Query("SELECT * FROM tasks ORDER BY task_id DESC")
-    List<Task> getAll();
+    LiveData<List<Task>> getAll();
 
     @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY task_id  DESC")
-    List<Task> findTaskByProjectId(int projectId);
+    LiveData<List<Task>> findTaskByProjectId(int projectId);
 
-    @Query("UPDATE tasks SET title = :title, description = :description WHERE task_id = :taskId")
-    void update(int taskId, String title, String description);
+    @Update
+    void update(Task task);
 
     @Delete
     void delete(Task task);

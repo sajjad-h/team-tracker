@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
@@ -15,31 +19,38 @@ import com.example.teamtracker.models.Task;
 
 import java.util.List;
 
-public class TaskListAdapter extends RecyclerView.Adapter<TaskListViewHolder> {
-    private final Context context;
-    private List<Task> taskList;
+public class TaskListAdapter extends ListAdapter<Task, TaskListViewHolder> {
+    private LiveData<List<Task>> taskList;
 
-    public TaskListAdapter(Context context, List<Task>taskList) {
-        this.context = context;
-        this.taskList = taskList;
+    public TaskListAdapter() {
+        super(DIFF_CALLBACK);
     }
+
+    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getTitle().equals(newItem.getTitle())
+                    && oldItem.getDescription().equals(newItem.getDescription())
+                    && oldItem.getProjectId().equals(newItem.getProjectId());
+        }
+    };
 
     @NonNull
     @Override
     public TaskListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.task_list_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_item_layout, parent, false);
         return new TaskListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskListViewHolder holder, int position) {
-        Task task = taskList.get(position);
+        Task task = getItem(position);
         holder.setData(task);
-    }
-
-    @Override
-    public int getItemCount() {
-        return taskList.size();
     }
 
 }
