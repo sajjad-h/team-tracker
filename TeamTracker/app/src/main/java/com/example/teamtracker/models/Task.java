@@ -16,17 +16,25 @@ public class Task {
     @ColumnInfo(name = "task_id")
     public int id;
 
-    @ColumnInfo(name = "title")
-    private String title;
+    @ColumnInfo(name = "start_time")
+    private Long startTime;
 
     @ColumnInfo(name = "description")
     private String description;
 
+    @ColumnInfo(name = "duration")
+    private Long duration;
+
+    @ColumnInfo(name = "title")
+    private String title;
+
     @ColumnInfo(name = "project_id")
     public String projectId;
 
-    public Task(String title, String description, String projectId) {
+    public Task(String title, String description, Long startTime, Long duration, String projectId) {
         this.title = title;
+        this.startTime = startTime;
+        this.duration = duration;
         this.description = description;
         this.projectId = projectId;
     }
@@ -39,27 +47,43 @@ public class Task {
         this.id = id;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getTitle() {
-        return title;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

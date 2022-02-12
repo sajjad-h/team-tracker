@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="#C9D6DF"
         app:cardCornerRadius="8dp">
 
         <LinearLayout
@@ -26,29 +26,62 @@
                     android:text="Title"
                     android:textColor="@color/contentTextColor"/>
 
-                <TextView
-                    android:id="@+id/taskDescriptionTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Short Detail"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="8dp"
-                    android:textColor="@color/contentTextColor"/>
-
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <ImageButton
-                        android:id="@+id/taskEditImageButton"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_baseline_timer_24"/>
+
+                        <TextView
+                            android:id="@+id/durationTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:textColor="@color/contentTextColor"
+                            android:text="Time"
+                            android:layout_marginStart="3dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_baseline_create_24"/>
+
+                        <TextView
+                            android:id="@+id/startTimeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:textColor="@color/contentTextColor"
+                            android:text="Date"
+                            android:layout_marginStart="3dp"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/taskCreatorImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
                         android:background="@null"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_baseline_edit_24"/>
+                        android:src="@drawable/ic_baseline_play_circle" />
 
                 </RelativeLayout>
 
