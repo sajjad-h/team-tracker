@@ -37,8 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageButton googleLoginButton;
     private CircularProgressButton registerButton;
     private static final String TAG = "login-activity-tag";
-    private static final String SERVER_OAUTH_LOGIN_URL = "http://team-tracker.servehttp.com/api/google-oauth-login?idToken=";
-    private static final String SERVER_REGISTER_URL = "http://team-tracker.servehttp.com/api/register";
     private ActivityResultLauncher<Intent> loginActivityResultLauncher;
     private SharedRefs sharedRefs;
     private AuthViewModel authViewModel;
