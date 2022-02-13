@@ -13,11 +13,11 @@ import java.io.IOException;
 import io.reactivex.Observable;
 
 
-public class LoginViewModel extends AndroidViewModel {
+public class AuthViewModel extends AndroidViewModel {
     private AuthRepository authRepository;
     Observable<Boolean> isLoginSuccessful;
 
-    public LoginViewModel(@NonNull Application application) {
+    public AuthViewModel(@NonNull Application application) {
         super(application);
         authRepository = new AuthRepository(application);
     }
@@ -28,5 +28,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> googleOAuthLogin(String googleIdToken) {
         return authRepository.googleOAuthLogin(googleIdToken);
+    }
+
+    public LiveData<Boolean> register(String name, String username, String password) {
+        return authRepository.register(name, username, password);
     }
 }

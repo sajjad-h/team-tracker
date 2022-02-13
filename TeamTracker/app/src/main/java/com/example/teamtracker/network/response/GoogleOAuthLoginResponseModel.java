@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GoogleOAuthLoginResponse {
-
-    @SerializedName("access_token")
-    private String accessToken;
+public class GoogleOAuthLoginResponseModel {
 
     @SerializedName("status")
     private String status;
 
+    @SerializedName("access_token")
+    private String accessToken;
+
     @SerializedName("description")
     private String description;
 
-    public GoogleOAuthLoginResponse(String accessToken, String status, String description) {
+    public GoogleOAuthLoginResponseModel(String accessToken, String status, String description) {
         this.accessToken = accessToken;
         this.status = status;
         this.description = description;

@@ -7,13 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.teamtracker.network.APIClient;
 import com.example.teamtracker.network.request.LoginRequestModel;
+import com.example.teamtracker.network.request.RegisterRequestModel;
+import com.example.teamtracker.network.response.RegisterResponseModel;
 import com.example.teamtracker.network.service.AuthService;
-import com.example.teamtracker.network.response.GoogleOAuthLoginResponse;
+import com.example.teamtracker.network.response.GoogleOAuthLoginResponseModel;
 import com.example.teamtracker.util.SharedRefs;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AuthRepository {
     private AuthService authService;
@@ -31,9 +34,14 @@ public class AuthRepository {
         authService.login(new LoginRequestModel(username, password)).enqueue(new Callback<retrofit2.Response<Void>>() {
             @Override
             public void onResponse(Call<retrofit2.Response<Void>> call, retrofit2.Response<retrofit2.Response<Void>> response) {
-                String accessToken = response.headers().get(SharedRefs.AUTHORIZATION);
-                sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
-                isLoginSuccessful.setValue(true);
+                if (response.code() == 200) {
+                    String accessToken = response.headers().get(SharedRefs.AUTHORIZATION);
+                    sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
+                    isLoginSuccessful.setValue(true);
+                }
+                else {
+                    isLoginSuccessful.setValue(false);
+                }
             }
 
             @Override
@@ -47,10 +55,10 @@ public class AuthRepository {
 
     public LiveData<Boolean> googleOAuthLogin(String googleIdToken) {
         MutableLiveData<Boolean> isLoginSuccessful = new MutableLiveData<>();
-        authService.googleOAuthLogin(googleIdToken).enqueue(new Callback<GoogleOAuthLoginResponse>() {
+        authService.googleOAuthLogin(googleIdToken).enqueue(new Callback<GoogleOAuthLoginResponseModel>() {
             @Override
-            public void onResponse(Call<GoogleOAuthLoginResponse> call, retrofit2.Response<GoogleOAuthLoginResponse> response) {
-                GoogleOAuthLoginResponse googleOAuthLoginResponse = response.body();
+            public void onResponse(Call<GoogleOAuthLoginResponseModel> call, retrofit2.Response<GoogleOAuthLoginResponseModel> response) {
+                GoogleOAuthLoginResponseModel googleOAuthLoginResponse = response.body();
                 String status = googleOAuthLoginResponse.getStatus();
                 if (status.equals("OK")) {
                     String accessToken = googleOAuthLoginResponse.getAccessToken();
@@ -62,10 +70,32 @@ public class AuthRepository {
             }
 
             @Override
-            public void onFailure(Call<GoogleOAuthLoginResponse> call, Throwable t) {
+            public void onFailure(Call<GoogleOAuthLoginResponseModel> call, Throwable t) {
                 isLoginSuccessful.setValue(false);
             }
         });
         return isLoginSuccessful;
+    }
+
+    public LiveData<Boolean> register(String name, String email, String password) {
+        MutableLiveData<Boolean> isRegistrationSuccessful = new MutableLiveData<>();
+        authService.register(new RegisterRequestModel(name, email, password)).enqueue(new Callback<RegisterResponseModel>() {
+            @Override
+            public void onResponse(Call<RegisterResponseModel> call, retrofit2.Response<RegisterResponseModel> response) {
+                RegisterResponseModel registerResponseModel = response.body();
+                String status = registerResponseModel.getStatus();
+                if (status.equals("OK")) {
+                    isRegistrationSuccessful.setValue(true);
+                } else {
+                    isRegistrationSuccessful.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponseModel> call, Throwable t) {
+                isRegistrationSuccessful.setValue(false);
+            }
+        });
+        return isRegistrationSuccessful;
     }
 }

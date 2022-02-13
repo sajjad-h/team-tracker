@@ -1,7 +1,9 @@
 package com.example.teamtracker.network.service;
 
 import com.example.teamtracker.network.request.LoginRequestModel;
-import com.example.teamtracker.network.response.GoogleOAuthLoginResponse;
+import com.example.teamtracker.network.request.RegisterRequestModel;
+import com.example.teamtracker.network.response.GoogleOAuthLoginResponseModel;
+import com.example.teamtracker.network.response.RegisterResponseModel;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,5 +20,9 @@ public interface AuthService {
 
     @GET("google-oauth-login")
     @Headers({"Content-Type: application/json"})
-    Call<GoogleOAuthLoginResponse> googleOAuthLogin(@Query("idToken") String googleIdToken);
+    Call<GoogleOAuthLoginResponseModel> googleOAuthLogin(@Query("idToken") String googleIdToken);
+
+    @POST("register")
+    @Headers({"Content-Type: application/json"})
+    Call<RegisterResponseModel> register(@Body RegisterRequestModel registerRequestModel);
 }

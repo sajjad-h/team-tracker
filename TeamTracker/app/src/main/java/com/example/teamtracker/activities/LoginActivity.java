@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.util.SharedRefs;
-import com.example.teamtracker.viewmodels.LoginViewModel;
+import com.example.teamtracker.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "login-activity-tag";
     private ActivityResultLauncher<Intent> loginActivityResultLauncher;
     private SharedRefs sharedRefs;
-    private LoginViewModel loginViewModel;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedRefs = new SharedRefs(getApplicationContext());
 
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         loginActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -94,9 +94,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginWithForm(String username, String password) {
-        loginViewModel.login(username, password).observe(LoginActivity.this, isLoginSuccessful -> {
+        authViewModel.login(username, password).observe(LoginActivity.this, isLoginSuccessful -> {
             if (isLoginSuccessful) {
-                Toast.makeText(LoginActivity.this, "Login Successful!" + sharedRefs.getString(SharedRefs.ACCESS_TOKEN, "-1"), Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(LoginActivity.this, ProtectedActivity.class));
                 finish();
             } else {
@@ -127,12 +127,11 @@ public class LoginActivity extends AppCompatActivity {
                 String personId = acct.getId();
                 Uri personPhoto = acct.getPhotoUrl();
                 String idToken = acct.getIdToken();
-                loginViewModel.googleOAuthLogin(idToken).observe(LoginActivity.this, isLoginSuccessful -> {
+                authViewModel.googleOAuthLogin(idToken).observe(LoginActivity.this, isLoginSuccessful -> {
                     if (isLoginSuccessful) {
-                        Toast.makeText(LoginActivity.this, "Login Successful!" + sharedRefs.getString(SharedRefs.ACCESS_TOKEN, "-1"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
                         sharedRefs.putString(sharedRefs.USER_NAME, personName);
                         sharedRefs.putString(sharedRefs.USER_EMAIL, personEmail);
-//                        Toast.makeText(this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(this, ProtectedActivity.class));
                         finish();
                     } else {
