@@ -14,14 +14,11 @@ import com.example.teamtracker.network.service.AuthService;
 import com.example.teamtracker.network.response.GoogleOAuthLoginResponseModel;
 import com.example.teamtracker.util.SharedRefs;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AuthRepository {
     private AuthService authService;
-    Observable<Boolean> isLoginSuccessful;
     SharedRefs sharedRefs;
     private Object Response;
 

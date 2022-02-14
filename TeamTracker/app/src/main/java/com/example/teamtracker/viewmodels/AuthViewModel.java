@@ -9,14 +9,9 @@ import androidx.lifecycle.LiveData;
 import com.example.teamtracker.network.response.GoogleLoginResponseModel;
 import com.example.teamtracker.repositories.AuthRepository;
 
-import java.io.IOException;
-
-import io.reactivex.Observable;
-
 
 public class AuthViewModel extends AndroidViewModel {
     private AuthRepository authRepository;
-    Observable<Boolean> isLoginSuccessful;
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
