@@ -33,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private ImageButton googleLoginButton;
     private CircularProgressButton registerButton;
-    private ActivityResultLauncher<Intent> loginActivityResultLauncher;
+    private ActivityResultLauncher<Intent> googleLoginActivityResultLauncher;
     private AuthViewModel authViewModel;
 
     @Override
@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        loginActivityResultLauncher = registerForActivityResult(
+        googleLoginActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -53,15 +53,11 @@ public class RegisterActivity extends AppCompatActivity {
                             Intent data = result.getData();
                             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                             GoogleLoginResponseModel googleLoginResponseModel = GoogleLoginService.getGoogleAccountInfo(task);
-                            authViewModel.googleOAuthLogin(googleLoginResponseModel).observe(RegisterActivity.this, isLoginSuccessful -> {
-                                if (isLoginSuccessful) {
-                                    Toast.makeText(RegisterActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(RegisterActivity.this, ProtectedActivity.class));
-                                    finish();
-                                } else {
-                                    Toast.makeText(RegisterActivity.this, "Service Error!", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            if (googleLoginResponseModel == null) {
+                                Toast.makeText(RegisterActivity.this, "Service Error!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            loginWithGoogle(googleLoginResponseModel);
                         }
                     }
                 });
@@ -70,7 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginWithGoogle();
+                GoogleSignInClient mGoogleSignInClient = GoogleLoginService.getInstance(RegisterActivity.this);
+                Intent loginIntent = mGoogleSignInClient.getSignInIntent();
+                googleLoginActivityResultLauncher.launch(loginIntent);
             }
         });
 
@@ -110,10 +108,16 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void loginWithGoogle() {
-        GoogleSignInClient mGoogleSignInClient = GoogleLoginService.getInstance(this);
-        Intent loginIntent = mGoogleSignInClient.getSignInIntent();
-        loginActivityResultLauncher.launch(loginIntent);
+    private void loginWithGoogle(GoogleLoginResponseModel googleLoginResponseModel) {
+        authViewModel.googleOAuthLogin(googleLoginResponseModel).observe(RegisterActivity.this, isLoginSuccessful -> {
+            if (isLoginSuccessful) {
+                Toast.makeText(RegisterActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(RegisterActivity.this, ProtectedActivity.class));
+                finish();
+            } else {
+                Toast.makeText(RegisterActivity.this, "Service Error!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void changeStatusBarColor() {
