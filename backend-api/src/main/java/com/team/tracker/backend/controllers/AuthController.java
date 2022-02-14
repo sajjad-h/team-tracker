@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ import static com.team.tracker.backend.security.SecurityConstants.*;
 public class AuthController {
     public static final String REGISTER = "/register";
     public static final String GOOGLE_OAUTH_LOG_IN = "/google-oauth-login";
+    public static final String LOGGED_USER_DETAILS = "/me";
     public static final String GOOGLE_OAUTH_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo?id_token=";
 
     @Autowired
@@ -88,6 +90,18 @@ public class AuthController {
                 .signWith(SignatureAlgorithm.HS512, SECRET).compact();
         response.put("access_token", TOKEN_PREFIX + token);
         response.put("status", "OK");
+        return response;
+    }
+
+    @RequestMapping(value = LOGGED_USER_DETAILS, method = RequestMethod.GET)
+    @ResponseBody
+    public HashMap<String, Object> loggedUserDetails() {
+        HashMap<String, Object> response = new HashMap<>();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> userOptional = userService.findByEmail(email);
+        User user = userOptional.get();
+        response.put("status", "OK");
+        response.put("data", user);
         return response;
     }
 
