@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.teamtracker.network.APIClient;
 import com.example.teamtracker.network.request.LoginRequestModel;
 import com.example.teamtracker.network.request.RegisterRequestModel;
+import com.example.teamtracker.network.response.GoogleLoginResponseModel;
 import com.example.teamtracker.network.response.RegisterResponseModel;
 import com.example.teamtracker.network.service.AuthService;
 import com.example.teamtracker.network.response.GoogleOAuthLoginResponseModel;
@@ -53,16 +54,18 @@ public class AuthRepository {
         return isLoginSuccessful;
     }
 
-    public LiveData<Boolean> googleOAuthLogin(String googleIdToken) {
+    public LiveData<Boolean> googleOAuthLogin(GoogleLoginResponseModel googleLoginResponseModel) {
         MutableLiveData<Boolean> isLoginSuccessful = new MutableLiveData<>();
-        authService.googleOAuthLogin(googleIdToken).enqueue(new Callback<GoogleOAuthLoginResponseModel>() {
+        authService.googleOAuthLogin(googleLoginResponseModel.getIdToken()).enqueue(new Callback<GoogleOAuthLoginResponseModel>() {
             @Override
             public void onResponse(Call<GoogleOAuthLoginResponseModel> call, retrofit2.Response<GoogleOAuthLoginResponseModel> response) {
-                GoogleOAuthLoginResponseModel googleOAuthLoginResponse = response.body();
-                String status = googleOAuthLoginResponse.getStatus();
+                GoogleOAuthLoginResponseModel googleOAuthLoginResponseModel = response.body();
+                String status = googleOAuthLoginResponseModel.getStatus();
                 if (status.equals("OK")) {
-                    String accessToken = googleOAuthLoginResponse.getAccessToken();
+                    String accessToken = googleOAuthLoginResponseModel.getAccessToken();
                     sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
+                    sharedRefs.putString(SharedRefs.USER_NAME, googleLoginResponseModel.getDisplayName());
+                    sharedRefs.putString(SharedRefs.USER_EMAIL, googleLoginResponseModel.getEmail());
                     isLoginSuccessful.setValue(true);
                 } else {
                     isLoginSuccessful.setValue(false);
