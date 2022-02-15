@@ -8,7 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -23,21 +23,17 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.teamtracker.R;
-import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
 import com.example.teamtracker.util.DateTimeUtil;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.example.teamtracker.viewmodels.TaskViewModel;
 
 public class TimerFragment extends Fragment {
     private Chronometer chronometer;
     private ToggleButton toggleButton;
-    private RoomDB database;
     private Project project;
     private Long startTime;
+    private TaskViewModel taskViewModel;
 
     public TimerFragment(Project project) {
         this.project = project;
@@ -51,6 +47,9 @@ public class TimerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+
     }
 
     @Override
@@ -112,8 +111,7 @@ public class TimerFragment extends Fragment {
                             edtTaskDescription.setError("Description can't be empty.");
                         } else {
                             Task task = new Task(taskTitle, taskDescription, startTime, duration, String.valueOf(project.getId()));
-                            database = RoomDB.getInstance(getContext());
-                            database.taskDao().insert(task);
+                            taskViewModel.saveTask(task);
                             Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }

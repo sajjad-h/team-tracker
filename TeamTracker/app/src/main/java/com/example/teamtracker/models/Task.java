@@ -35,6 +35,9 @@ public class Task {
     @ColumnInfo(name = "project_id")
     public String projectId;
 
+    @ColumnInfo(name = "is_synced")
+    private Boolean isSynced = false;
+
     public Task(String title, String description, Long startTime, Long duration, String projectId) {
         this.title = title;
         this.startTime = startTime;
@@ -89,5 +92,13 @@ public class Task {
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
+    }
+
+    public Boolean getSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(Boolean synced) {
+        isSynced = synced;
     }
 }
