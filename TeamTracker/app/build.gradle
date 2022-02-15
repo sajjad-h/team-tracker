@@ -36,4 +36,7 @@ dependencies {
     // Room Database
     implementation "androidx.room:room-runtime:2.4.1"
     annotationProcessor "androidx.room:room-compiler:2.4.1"
+
+    // MP android Chart Framework
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
