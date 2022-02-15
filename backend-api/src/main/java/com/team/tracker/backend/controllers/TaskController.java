@@ -20,7 +20,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     
-    @PostMapping("/")
+    @PostMapping("")
     public HashMap<String, Object> createTask(@RequestBody Task task) {
         taskService.save(task);
         HashMap<String, Object> values = new HashMap<>();

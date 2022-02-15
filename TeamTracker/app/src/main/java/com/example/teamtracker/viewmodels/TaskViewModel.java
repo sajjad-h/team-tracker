@@ -12,26 +12,27 @@ import com.example.teamtracker.repositories.TaskRepository;
 import java.util.List;
 
 public class TaskViewModel extends AndroidViewModel {
-    private TaskRepository repository;
+    private TaskRepository taskRepository;
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
-        repository = new TaskRepository(application);
+        taskRepository = new TaskRepository(application);
     }
 
-    public void insert(Task task) {
-        repository.insert(task);
+    public void saveTask(Task task) {
+        taskRepository.insert(task);
+        taskRepository.postTask(task);
     }
 
     public void update(Task task) {
-        repository.update(task);
+        taskRepository.update(task);
     }
 
     public void delete(Task task) {
-        repository.delete(task);
+        taskRepository.delete(task);
     }
 
     public LiveData<List<Task>> getAllTasksByProjectId(int projectId) {
-        return repository.getAllTasksByProjectId(projectId);
+        return taskRepository.getAllTasksByProjectId(projectId);
     }
 }
