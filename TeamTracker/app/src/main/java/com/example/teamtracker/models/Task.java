@@ -2,19 +2,23 @@ package com.example.teamtracker.models;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+
+import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(entity = Project.class,
         parentColumns = "project_id",
         childColumns = "project_id",
         onDelete = CASCADE), tableName = "tasks")
 public class Task {
-    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @PrimaryKey
     @ColumnInfo(name = "task_id")
-    public int id;
+    private UUID id = UUID.randomUUID();
 
     @ColumnInfo(name = "start_time")
     private Long startTime;
@@ -39,11 +43,11 @@ public class Task {
         this.projectId = projectId;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

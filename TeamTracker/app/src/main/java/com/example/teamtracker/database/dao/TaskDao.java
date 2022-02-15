@@ -21,7 +21,7 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks ORDER BY task_id DESC")
     LiveData<List<Task>> getAll();
 
-    @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY task_id  DESC")
+    @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY start_time DESC")
     LiveData<List<Task>> findTaskByProjectId(int projectId);
 
     @Update
