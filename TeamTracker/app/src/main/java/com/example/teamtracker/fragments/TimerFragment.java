@@ -4,12 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,15 +16,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.teamtracker.R;
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
 import com.example.teamtracker.util.DateTimeUtil;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class TimerFragment extends Fragment {
     private Chronometer chronometer;
@@ -104,8 +98,8 @@ public class TimerFragment extends Fragment {
                     public void onClick(View view) {
                         EditText edtTaskTitle = addTaskCustomLayout.findViewById(R.id.task_Title);
                         EditText edtTaskDescription = addTaskCustomLayout.findViewById(R.id.task_Description);
-                        String taskTitle = String.valueOf(edtTaskTitle.getText());
-                        String taskDescription = String.valueOf(edtTaskDescription.getText());
+                        String taskTitle = String.valueOf(edtTaskTitle.getText()).trim();
+                        String taskDescription = String.valueOf(edtTaskDescription.getText()).trim();
                         if (TextUtils.isEmpty(taskTitle)) {
                             edtTaskTitle.setError("Title can't be empty.");
                         } else if (TextUtils.isEmpty(taskDescription)) {

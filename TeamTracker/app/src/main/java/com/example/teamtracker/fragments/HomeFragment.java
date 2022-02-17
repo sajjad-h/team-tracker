@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +39,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -92,24 +93,42 @@ public class HomeFragment extends Fragment {
 
     private void showAddProjectDialog(Context context) {
         final EditText projectNameEditText = new EditText(context);
+        projectNameEditText.setMaxLines(1);
+        projectNameEditText.setLines(1);
+        projectNameEditText.setSingleLine(true);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Create a Project")
                 .setMessage("What is your project name?")
                 .setView(projectNameEditText)
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String projectName = String.valueOf(projectNameEditText.getText());
-                        Project project = new Project(projectName);
-                        database.projectDao().insert(project);
-                        projectList.clear();
-                        projectList.addAll(database.projectDao().getAll());
-                        projectListAdapter.notifyDataSetChanged();
-                        Toast.makeText(context, "Project Created Successfully!", Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .setPositiveButton("Create", null)
                 .setNegativeButton("Cancel", null)
                 .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        String projectName = String.valueOf(projectNameEditText.getText()).trim();
+                        if (TextUtils.isEmpty(projectName)) {
+                            projectNameEditText.setError("Project name can't be empty.");
+                        } else {
+                            Project project = new Project(projectName);
+                            database.projectDao().insert(project);
+                            projectList.clear();
+                            projectList.addAll(database.projectDao().getAll());
+                            projectListAdapter.notifyDataSetChanged();
+                            Toast.makeText(context, "Project Created Successfully!", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         dialog.show();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_corner_menu_colored_rectangle);
     }

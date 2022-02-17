@@ -19,6 +19,7 @@
         android:paddingRight="8dp"
         android:paddingBottom="8dp"
         android:text="@string/project_name"
+        android:maxLines="1"
         android:textColor="@color/contentTextColor"
         android:textStyle="normal"
         android:typeface="serif" />
