@@ -2,8 +2,6 @@ package com.example.teamtracker.network.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class GoogleOAuthLoginResponseModel {
 
     @SerializedName("status")
