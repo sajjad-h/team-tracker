@@ -21,12 +21,12 @@ public class GraphFragment extends Fragment {
 
     private Project project;
 
-    public GraphFragment() {
-        // Required empty public constructor
+    public GraphFragment(Project project) {
+        this.project = project;
     }
 
     public static GraphFragment newInstance(Project project) {
-        GraphFragment fragment = new GraphFragment();
+        GraphFragment fragment = new GraphFragment(project);
         return fragment;
     }
 
