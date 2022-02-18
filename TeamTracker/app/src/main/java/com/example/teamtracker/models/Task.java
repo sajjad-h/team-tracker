@@ -8,6 +8,9 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.example.teamtracker.network.request.TaskPostRequestModel;
+import com.example.teamtracker.network.response.TaskResponseModel;
+
 import java.util.UUID;
 
 @Entity(foreignKeys = @ForeignKey(entity = Project.class,
@@ -100,5 +103,9 @@ public class Task {
 
     public void setSynced(Boolean synced) {
         isSynced = synced;
+    }
+
+    public TaskPostRequestModel toTaskPostRequestModel() {
+        return new TaskPostRequestModel(this.id.toString(), this.startTime, this.duration, this.description, this.title, this.projectId);
     }
 }

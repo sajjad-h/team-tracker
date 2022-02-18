@@ -44,7 +44,7 @@ public class TaskRepository {
     }
 
     public LiveData<List<Task>> getAllTasksByProjectId(int projectId) {
-        return taskDao.findTaskByProjectId(projectId);
+        return taskDao.findTaskByProjectIdLiveData(projectId);
     }
 
     public List<Task> findTaskByIsSynced(Boolean isSynced) {

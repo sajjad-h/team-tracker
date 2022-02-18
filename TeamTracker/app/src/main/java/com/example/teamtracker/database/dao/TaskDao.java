@@ -22,7 +22,10 @@ public interface TaskDao {
     LiveData<List<Task>> getAll();
 
     @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY start_time DESC")
-    LiveData<List<Task>> findTaskByProjectId(int projectId);
+    LiveData<List<Task>> findTaskByProjectIdLiveData(int projectId);
+
+    @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY start_time DESC")
+    List<Task> findTaskByProjectId(int projectId);
 
     @Query("SELECT * FROM tasks WHERE is_synced = :isSynced")
     List<Task> findTaskByIsSynced(Boolean isSynced);

@@ -1,32 +1,34 @@
-package com.example.teamtracker.network.request;
+package com.example.teamtracker.network.response;
 
+import com.example.teamtracker.models.Task;
 import com.google.gson.annotations.SerializedName;
 
-public class TaskPostRequestModel {
+import java.util.UUID;
 
-    @SerializedName("id")
-    private String id;
+public class TaskResponseModel {
+    @SerializedName(value = "id")
+    public String id;
 
-    @SerializedName("startTime")
+    @SerializedName(value = "startTime")
     private Long startTime;
 
-    @SerializedName("duration")
-    private Long duration;
-
-    @SerializedName("description")
+    @SerializedName(value = "description")
     private String description;
 
-    @SerializedName("title")
+    @SerializedName(value = "duration")
+    private Long duration;
+
+    @SerializedName(value = "title")
     private String title;
 
-    @SerializedName("projectId")
+    @SerializedName(value = "projectId")
     private String projectId;
 
-    public TaskPostRequestModel(String id, Long startTime, Long duration, String description, String title, String projectId) {
+    public TaskResponseModel(String id, Long startTime, String description, Long duration, String title, String projectId) {
         this.id = id;
         this.startTime = startTime;
-        this.duration = duration;
         this.description = description;
+        this.duration = duration;
         this.title = title;
         this.projectId = projectId;
     }
@@ -47,20 +49,20 @@ public class TaskPostRequestModel {
         this.startTime = startTime;
     }
 
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
     public String getTitle() {
@@ -79,5 +81,9 @@ public class TaskPostRequestModel {
         this.projectId = projectId;
     }
 
-
+    public Task toTaskModel() {
+        Task task = new Task(this.title, this.description, this.startTime, this.duration, this.projectId);
+        task.setId(UUID.fromString(this.id));
+        return task;
+    }
 }
