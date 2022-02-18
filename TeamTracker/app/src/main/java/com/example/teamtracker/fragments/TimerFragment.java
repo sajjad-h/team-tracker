@@ -103,8 +103,8 @@ public class TimerFragment extends Fragment {
                     public void onClick(View view) {
                         EditText edtTaskTitle = addTaskCustomLayout.findViewById(R.id.task_Title);
                         EditText edtTaskDescription = addTaskCustomLayout.findViewById(R.id.task_Description);
-                        String taskTitle = String.valueOf(edtTaskTitle.getText());
-                        String taskDescription = String.valueOf(edtTaskDescription.getText());
+                        String taskTitle = String.valueOf(edtTaskTitle.getText()).trim();
+                        String taskDescription = String.valueOf(edtTaskDescription.getText()).trim();
                         if (TextUtils.isEmpty(taskTitle)) {
                             edtTaskTitle.setError("Title can't be empty.");
                         } else if (TextUtils.isEmpty(taskDescription)) {
