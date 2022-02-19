@@ -15,18 +15,17 @@ import android.view.ViewGroup;
 import com.example.teamtracker.R;
 import com.example.teamtracker.models.Project;
 
-
 public class GraphFragment extends Fragment {
 
 
     private Project project;
 
-    public GraphFragment() {
-        // Required empty public constructor
+    public GraphFragment(Project project) {
+        this.project = project;
     }
 
     public static GraphFragment newInstance(Project project) {
-        GraphFragment fragment = new GraphFragment();
+        GraphFragment fragment = new GraphFragment(project);
         return fragment;
     }
 
@@ -45,10 +44,10 @@ public class GraphFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Fragment PersonalContributionBarchartFragment = new PersonalContributionBarchartFragment(project);
+        Fragment personalContributionBarchartFragment = new PersonalContributionBarchartFragment(project);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.personal_contribution_barchart_fragment_container, PersonalContributionBarchartFragment, "GraphFragment");
+        fragmentTransaction.replace(R.id.personal_contribution_barchart_fragment_container, personalContributionBarchartFragment, "GraphFragment");
         fragmentTransaction.commit();
     }
 }

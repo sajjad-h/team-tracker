@@ -9,6 +9,7 @@ public class DateTimeUtil {
     private static final int MINUTES_IN_HOUR = 60;
     private static final int MILLI = 1000;
 
+
     public static String milliSecondToTimeFormat(Long duration) {
         String timeString = "";
         duration = duration / MILLI; // converting millisecond to second
@@ -29,5 +30,43 @@ public class DateTimeUtil {
         Date date = new Date(epoch);
         String dateString = dateFormat.format(date);
         return dateString;
+    }
+
+    public static Long getStartEpochOfDay(Long epoch) {
+        long secondInaDay = 60 * 60 * 24;
+        long currentMilliSecond = epoch;
+        long startEpochOfTheDay = currentMilliSecond - (currentMilliSecond %secondInaDay);
+        return startEpochOfTheDay;
+    }
+
+    public static Integer getDayFromEpoch(Long epoch) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date dateFormat = new java.util.Date(epoch);
+        String weekDay = sdf.format(dateFormat);
+        Integer day = -1;
+        switch (weekDay) {
+            case "Saturday":
+                day = 0;
+                break;
+            case "Sunday":
+                day = 1;
+                break;
+            case "Monday":
+                day = 2;
+                break;
+            case "Tuesday":
+                day = 3;
+                break;
+            case "Wednesday":
+                day = 4;
+                break;
+            case "Thursday":
+                day = 5;
+                break;
+            case "Friday":
+                day = 6;
+                break;
+        }
+        return day;
     }
 }
