@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.teamtracker.R;
 import com.example.teamtracker.models.Project;
 
+
 public class GraphFragment extends Fragment {
 
 
@@ -25,7 +26,7 @@ public class GraphFragment extends Fragment {
     }
 
     public static GraphFragment newInstance(Project project) {
-        GraphFragment fragment = new GraphFragment(project);
+        GraphFragment fragment = new GraphFragment();
         return fragment;
     }
 

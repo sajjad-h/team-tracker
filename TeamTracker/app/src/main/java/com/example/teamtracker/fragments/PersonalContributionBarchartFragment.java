@@ -18,6 +18,16 @@ import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
 import com.example.teamtracker.util.DateTimeUtil;
 import com.example.teamtracker.viewmodels.TaskViewModel;
+
+
+import android.os.SystemClock;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+
+import com.example.teamtracker.R;
+import com.example.teamtracker.models.Project;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -40,15 +50,14 @@ public class PersonalContributionBarchartFragment extends Fragment {
         this.project = project;
     }
 
-    public static PersonalContributionBarchartFragment newInstance(Project project) {
-        PersonalContributionBarchartFragment fragment = new PersonalContributionBarchartFragment(project);
+    public static PersonalContributionBarchartFragment newInstance(String param1, String param2) {
+        PersonalContributionBarchartFragment fragment = new PersonalContributionBarchartFragment();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasksByProjectId(project.getId()).observe(this, new Observer<List<Task>>() {
             @Override
