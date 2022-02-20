@@ -26,7 +26,7 @@ public class GraphFragment extends Fragment {
     }
 
     public static GraphFragment newInstance(Project project) {
-        GraphFragment fragment = new GraphFragment();
+        GraphFragment fragment = new GraphFragment(project);
         return fragment;
     }
 

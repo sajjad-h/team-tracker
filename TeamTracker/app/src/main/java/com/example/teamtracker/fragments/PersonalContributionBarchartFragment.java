@@ -19,15 +19,6 @@ import com.example.teamtracker.models.Task;
 import com.example.teamtracker.util.DateTimeUtil;
 import com.example.teamtracker.viewmodels.TaskViewModel;
 
-
-import android.os.SystemClock;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-
-import com.example.teamtracker.R;
-import com.example.teamtracker.models.Project;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -50,8 +41,8 @@ public class PersonalContributionBarchartFragment extends Fragment {
         this.project = project;
     }
 
-    public static PersonalContributionBarchartFragment newInstance(String param1, String param2) {
-        PersonalContributionBarchartFragment fragment = new PersonalContributionBarchartFragment();
+    public static PersonalContributionBarchartFragment newInstance(Project project) {
+        PersonalContributionBarchartFragment fragment = new PersonalContributionBarchartFragment(project);
         return fragment;
     }
 
@@ -63,14 +54,25 @@ public class PersonalContributionBarchartFragment extends Fragment {
             @Override
             public void onChanged(List<Task> tasks) {
                 Long currentTime = System.currentTimeMillis();
-                ArrayList<Long> contributionData = getContributionOfLastWeek(tasks, currentTime);
-                int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime));//end day of the graph (current day)
-                int startDay = (endDay+1)%7;//start day of the graph (day one week before)
-                ArrayList<BarEntry> data = new ArrayList<>();
-                for(int day=startDay; day<startDay+7; day++) {
-                    data.add(new BarEntry(day-startDay, contributionData.get(day%7)));
+                ArrayList<Long> graphData = getGraphData(tasks, currentTime);
+                String unit = "Second"; //setting unit of time which will be showed in graph
+                Long secondInMinute = 60L;
+                Long secondInHour = 60L * 60;
+                Long maxDuration = Collections.max(graphData);
+                if(maxDuration >= secondInHour) {
+                    unit = "Hour";
+                    for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i,graphData.get(i)/secondInHour);
+                } else if (maxDuration >= secondInMinute) {
+                    unit = "Minute";
+                    for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i,graphData.get(i)/secondInMinute);
                 }
-                makeBarChartGraph(data, currentTime);
+                int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime));//end day showed in the graph (current day)
+                int startDay = (endDay+1)%7;//start day showed in the graph (day one week before)
+                ArrayList<BarEntry> data = new ArrayList<>();
+                for(int day = 0; day < 7; day++) {
+                    data.add(new BarEntry(day, graphData.get((day + startDay) %7)));
+                }
+                makeBarChartGraph(data, currentTime, unit);
             }
         });
     }
@@ -88,8 +90,8 @@ public class PersonalContributionBarchartFragment extends Fragment {
         personalContributionBarchart = view.findViewById(R.id.personal_contribution_barchart);
     }
 
-    private void makeBarChartGraph(ArrayList<BarEntry> data, long currentTime) {
-        BarDataSet barDataSet = new BarDataSet(data, "Daily Contribution by Hours");
+    private void makeBarChartGraph(ArrayList<BarEntry> data, long currentTime, String unit) {
+        BarDataSet barDataSet = new BarDataSet(data, "Daily Contribution in " + unit + "s");
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         barDataSet.setValueTextColor(Color.BLACK);
         barDataSet.setValueTextSize(16f);
@@ -104,21 +106,21 @@ public class PersonalContributionBarchartFragment extends Fragment {
         personalContributionBarchart.setDescription(null);
     }
 
-    private ArrayList<String> getXAxisLabels(long currentTime) {
-        int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime)); //end day of the graph (current day)
-        int startDay = (endDay+1)%7;//start day of the graph (day one week before)
+    private ArrayList<String> getXAxisLabels(long currentTime) {    //labels the x-axis starting from 1 week before to current day
+        int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime)); //end day showed on the graph (current day)
+        int startDay = (endDay + 1) % 7;//start day showed on the graph (day one week before)
         String[] days = {"Sat", "Sun", "Mon", "Tue", "Wed", "Thurs",  "Fri"};
         ArrayList<String> label = new ArrayList<>();
-        for (int day = startDay; day < startDay+7; day++)
-            label.add(days[day%7]);
+        for (int day = 0; day < 7; day++)
+            label.add(days[(day + startDay) % 7]);
         return label;
     }
 
-    private ArrayList<Long> getContributionOfLastWeek(List<Task> tasks, long currentTime) {
+    private ArrayList<Long> getGraphData(List<Task> tasks, long currentTime) {   //returns daily contribution in seconds for the last week
         ArrayList<Long> contributionList = new ArrayList<Long>(Collections.nCopies(7, 0L));
-        Long milliSecondInAWeek = 1L*7*24*3600*1000;
-        Long startDay = DateTimeUtil.getStartEpochOfDay(currentTime-milliSecondInAWeek); //start day of the graph(day one week before)
-        Long endDay = DateTimeUtil.getStartEpochOfDay(currentTime);//end day of the graph (current day)
+        Long milliSecondInAWeek = 1L*7*24*60*60*1000;
+        Long startDay = DateTimeUtil.getStartEpochOfDay(currentTime-milliSecondInAWeek); //start day showed on the graph(day one week before)
+        Long endDay = DateTimeUtil.getStartEpochOfDay(currentTime);//end day showed on the graph (current day)
         for (Task task : tasks) {
             if(task.getStartTime()>=startDay && task.getStartTime()<=endDay){
                 int day = DateTimeUtil.getDayFromEpoch(task.getStartTime());
