@@ -57,7 +57,7 @@ public class PersonalContributionBarchartFragment extends Fragment {
                 ArrayList<Long> graphData = getGraphData(tasks, currentTime);
                 String unit = "Second"; //setting unit of time which will be showed in graph
                 Long secondInMinute = 60L;
-                Long secondInHour = 60L * 60;
+                Long secondInHour = 60L * secondInMinute;
                 Long maxDuration = Collections.max(graphData);
                 if(maxDuration >= secondInHour) {
                     unit = "Hour";
