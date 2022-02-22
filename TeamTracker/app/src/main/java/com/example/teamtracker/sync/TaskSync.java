@@ -1,14 +1,11 @@
 package com.example.teamtracker.sync;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.database.dao.TaskDao;
-import com.example.teamtracker.database.dao.TaskDao_Impl;
 import com.example.teamtracker.models.Task;
 import com.example.teamtracker.network.APIClient;
 import com.example.teamtracker.network.response.GetTaskByProjectIdResponseModel;
@@ -63,8 +60,7 @@ public class TaskSync {
                             @Override
                             public void onResponse(Call<Response<ResponseBody>> call, Response<Response<ResponseBody>> response) {
                                 if (response.isSuccessful()) {
-                                    task.setSynced(true);
-                                    taskDao.update(task);
+
                                 }
                             }
 
@@ -74,12 +70,6 @@ public class TaskSync {
                             }
                         });
                     }
-
-                    System.out.println(notInLocalTasks.size());
-                    System.out.println(notInServerTasks.size());
-                    System.out.println(localTasks.size());
-                    System.out.println(serverTasks.size());
-
                 }
                 else {
 

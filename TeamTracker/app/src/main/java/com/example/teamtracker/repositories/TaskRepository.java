@@ -47,10 +47,6 @@ public class TaskRepository {
         return taskDao.findTaskByProjectIdLiveData(projectId);
     }
 
-    public List<Task> findTaskByIsSynced(Boolean isSynced) {
-        return taskDao.findTaskByIsSynced(isSynced);
-    }
-
     public void postTask(Task task) {
         taskService.postTask(new TaskPostRequestModel(task.getId().toString(), task.getStartTime(), task.getDuration(), task.getDescription(), task.getTitle(), task.getProjectId()), sharedRefs.getString(SharedRefs.ACCESS_TOKEN, "")).enqueue(new Callback<Response<ResponseBody>>() {
             @Override

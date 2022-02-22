@@ -38,9 +38,6 @@ public class Task {
     @ColumnInfo(name = "project_id")
     public String projectId;
 
-    @ColumnInfo(name = "is_synced")
-    private Boolean isSynced = false;
-
     public Task(String title, String description, Long startTime, Long duration, String projectId) {
         this.title = title;
         this.startTime = startTime;
@@ -97,15 +94,35 @@ public class Task {
         this.projectId = projectId;
     }
 
-    public Boolean getSynced() {
-        return isSynced;
-    }
-
-    public void setSynced(Boolean synced) {
-        isSynced = synced;
-    }
-
     public TaskPostRequestModel toTaskPostRequestModel() {
         return new TaskPostRequestModel(this.id.toString(), this.startTime, this.duration, this.description, this.title, this.projectId);
+    }
+
+    public String toString() {
+        return "Task { " +
+                    "id: " + this.getId().toString() + ", " +
+                    "startTime: " + this.startTime + ", " +
+                    "duration: " + this.duration + ", " +
+                    "title: " + this.title + ", " +
+                    "description: " + this.description + ", " +
+                    "projectId: " + this.projectId +
+                " }";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Task taskOther = (Task) obj;
+        return  taskOther.getId().equals(this.getId()) &&
+                taskOther.getTitle().equals(this.getTitle()) &&
+                taskOther.getDescription().equals(this.getDescription()) &&
+                taskOther.getStartTime().equals(this.getStartTime()) &&
+                taskOther.getDuration().equals(this.getDuration()) &&
+                taskOther.getProjectId().equals(this.getProjectId());
     }
 }
