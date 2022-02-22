@@ -24,11 +24,15 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class PersonalContributionBarchartFragment extends Fragment {
@@ -54,23 +58,13 @@ public class PersonalContributionBarchartFragment extends Fragment {
             @Override
             public void onChanged(List<Task> tasks) {
                 Long currentTime = System.currentTimeMillis();
-                ArrayList<Long> graphData = getGraphData(tasks, currentTime);
-                String unit = "Second"; //setting unit of time which will be showed in graph
-                Long secondInMinute = 60L;
-                Long secondInHour = 60L * secondInMinute;
-                Long maxDuration = Collections.max(graphData);
-                if(maxDuration >= secondInHour) {
-                    unit = "Hour";
-                    for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i,graphData.get(i)/secondInHour);
-                } else if (maxDuration >= secondInMinute) {
-                    unit = "Minute";
-                    for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i,graphData.get(i)/secondInMinute);
-                }
+                ArrayList<Float> graphData = getGraphData(tasks, currentTime);
+                String unit = setUnitForGraph(graphData);
                 int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime));//end day showed in the graph (current day)
-                int startDay = (endDay+1)%7;//start day showed in the graph (day one week before)
+                int startDay = (endDay+1)%DateTimeUtil.DAYS_IN_WEEK;//start day showed in the graph (day one week before)
                 ArrayList<BarEntry> data = new ArrayList<>();
-                for(int day = 0; day < 7; day++) {
-                    data.add(new BarEntry(day, graphData.get((day + startDay) %7)));
+                for(int day = 0; day < DateTimeUtil.DAYS_IN_WEEK; day++) {
+                    data.add(new BarEntry(day, graphData.get((day + startDay) % DateTimeUtil.DAYS_IN_WEEK)));
                 }
                 makeBarChartGraph(data, currentTime, unit);
             }
@@ -108,25 +102,40 @@ public class PersonalContributionBarchartFragment extends Fragment {
 
     private ArrayList<String> getXAxisLabels(long currentTime) {    //labels the x-axis starting from 1 week before to current day
         int endDay = DateTimeUtil.getDayFromEpoch(DateTimeUtil.getStartEpochOfDay(currentTime)); //end day showed on the graph (current day)
-        int startDay = (endDay + 1) % 7;//start day showed on the graph (day one week before)
+        int startDay = (endDay + 1) % DateTimeUtil.DAYS_IN_WEEK;//start day showed on the graph (day one week before)
         String[] days = {"Sat", "Sun", "Mon", "Tue", "Wed", "Thurs",  "Fri"};
         ArrayList<String> label = new ArrayList<>();
-        for (int day = 0; day < 7; day++)
-            label.add(days[(day + startDay) % 7]);
+        for (int day = 0; day < DateTimeUtil.DAYS_IN_WEEK; day++)
+            label.add(days[(day + startDay) % DateTimeUtil.DAYS_IN_WEEK]);
         return label;
     }
 
-    private ArrayList<Long> getGraphData(List<Task> tasks, long currentTime) {   //returns daily contribution in seconds for the last week
-        ArrayList<Long> contributionList = new ArrayList<Long>(Collections.nCopies(7, 0L));
-        Long milliSecondInAWeek = 1L*7*24*60*60*1000;
-        Long startDay = DateTimeUtil.getStartEpochOfDay(currentTime-milliSecondInAWeek); //start day showed on the graph(day one week before)
-        Long endDay = DateTimeUtil.getStartEpochOfDay(currentTime);//end day showed on the graph (current day)
+    private ArrayList<Float> getGraphData(List<Task> tasks, long currentTime) {   //returns daily contribution in seconds for the last week
+        ArrayList<Float> contributionList = new ArrayList<Float>(Collections.nCopies(DateTimeUtil.DAYS_IN_WEEK, 0f));
+        Long milliSecondInAWeek = 1L * DateTimeUtil.DAYS_IN_WEEK * DateTimeUtil.HOURS_IN_DAY * DateTimeUtil.MINUTES_IN_HOUR * DateTimeUtil.SECONDS_IN_MINUTE * DateTimeUtil.MILLI;
+        Long startEpochOfStartDay = DateTimeUtil.getStartEpochOfDay(currentTime-milliSecondInAWeek); //start day showed on the graph(day one week before)
+        Long endEpochOfEndDay = DateTimeUtil.getEndEpochOfDay(currentTime);//end day showed on the graph (current day)
         for (Task task : tasks) {
-            if(task.getStartTime()>=startDay && task.getStartTime()<=endDay){
+            if(task.getStartTime()>=startEpochOfStartDay && task.getStartTime()<=endEpochOfEndDay){
                 int day = DateTimeUtil.getDayFromEpoch(task.getStartTime());
-                contributionList.set(day,contributionList.get(day)+task.getDuration()/1000);
+                contributionList.set(day,contributionList.get(day)+task.getDuration()/DateTimeUtil.MILLI);
             }
         }
         return (contributionList);
+    }
+    private String setUnitForGraph(ArrayList<Float> graphData) {
+        String unit = "Second";
+        Long secondInMinute = 1L*DateTimeUtil.SECONDS_IN_MINUTE;
+        Long secondInHour = DateTimeUtil.MINUTES_IN_HOUR * secondInMinute;
+        Float maxDuration = Collections.max(graphData);
+        if(maxDuration >= secondInHour) {
+            unit = "Hour";
+            for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i, graphData.get(i)/secondInHour);
+        } else if (maxDuration >= secondInMinute) {
+            unit = "Minute";
+            for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i, graphData.get(i)/secondInMinute);
+        }
+        for(int i = 0 ; i < graphData.size() ; i++) graphData.set(i, (float) Math.round(graphData.get(i)));
+        return unit;
     }
 }

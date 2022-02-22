@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeUtil {
-    private static final int SECONDS_IN_MINUTE = 60;
-    private static final int MINUTES_IN_HOUR = 60;
-    private static final int MILLI = 1000;
+    public static final int SECONDS_IN_MINUTE = 60;
+    public static final int MINUTES_IN_HOUR = 60;
+    public static final int HOURS_IN_DAY = 24;
+    public static final int DAYS_IN_WEEK = 7;
+    public static final int MILLI = 1000;
 
 
     public static String milliSecondToTimeFormat(Long duration) {
@@ -37,6 +39,10 @@ public class DateTimeUtil {
         long currentMilliSecond = epoch;
         long startEpochOfTheDay = currentMilliSecond - (currentMilliSecond %secondInaDay);
         return startEpochOfTheDay;
+    }
+
+    public static Long getEndEpochOfDay(Long epoch) {
+        return (getStartEpochOfDay(epoch) + HOURS_IN_DAY*MINUTES_IN_HOUR*SECONDS_IN_MINUTE*MILLI);
     }
 
     public static Integer getDayFromEpoch(Long epoch) {
