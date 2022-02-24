@@ -19,6 +19,7 @@ import com.example.teamtracker.adapters.TaskListAdapter;
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.models.Project;
 import com.example.teamtracker.models.Task;
+import com.example.teamtracker.sync.TaskSync;
 import com.example.teamtracker.viewmodels.TaskViewModel;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class TaskViewFragment extends Fragment {
     TaskListAdapter taskListAdapter;
     private Project project;
     private TaskViewModel taskViewModel;
+    private TaskSync taskSync;
 
     public TaskViewFragment(Project project) {
         this.project = project;
@@ -43,6 +45,9 @@ public class TaskViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        taskSync = new TaskSync(getContext());
+        taskSync.sync(project.getId());
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasksByProjectId(project.getId()).observe(this, new Observer<List<Task>>() {
