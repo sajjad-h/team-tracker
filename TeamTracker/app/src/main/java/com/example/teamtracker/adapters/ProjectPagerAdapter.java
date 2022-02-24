@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.teamtracker.fragments.DemoFragment;
+import com.example.teamtracker.fragments.GraphFragment;
 import com.example.teamtracker.fragments.TaskViewFragment;
 import com.example.teamtracker.models.Project;
 
@@ -35,7 +36,7 @@ public class ProjectPagerAdapter extends FragmentStateAdapter {
             case 1: // Fragment # 1 - This will show team members of a project
                 return DemoFragment.newInstance("team fragment");
             case 2: // Fragment # 2 - This will show graphs of a project
-                return DemoFragment.newInstance("graphs fragment");
+                return GraphFragment.newInstance(project);
             default:
                 return null;
         }
