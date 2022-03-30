@@ -12,6 +12,7 @@ public class SharedRefs {
     public final static String ACCESS_TOKEN = "access_token";
     public final static String USER_NAME = "user_name";
     public final static String USER_EMAIL = "user_email";
+    public final static String USER_ID = "user_id";
 
     public SharedRefs(Context context) {
         this.context = context;

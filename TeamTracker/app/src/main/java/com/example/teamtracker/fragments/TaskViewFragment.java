@@ -49,10 +49,10 @@ public class TaskViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         taskSync = new TaskSync(getContext());
-        taskSync.sync(project.getId());
+        taskSync.sync(project.getId().toString());
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllTasksByProjectId(project.getId()).observe(this, new Observer<List<Task>>() {
+        taskViewModel.getAllTasksByProjectId(project.getId().toString()).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 taskListAdapter.submitList(tasks);
@@ -82,7 +82,7 @@ public class TaskViewFragment extends Fragment {
             @Override
             public void onRefresh() {
                 Toast.makeText(getContext(), "syncing ...", Toast.LENGTH_SHORT).show();
-                taskSync.sync(project.getId());
+                taskSync.sync(project.getId().toString());
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -19,7 +19,6 @@ import com.example.teamtracker.R;
 import com.example.teamtracker.fragments.DemoFragment;
 import com.example.teamtracker.fragments.HomeFragment;
 
-import com.example.teamtracker.sync.TaskSync;
 import com.example.teamtracker.util.SharedRefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -70,7 +69,7 @@ public class ProtectedActivity extends AppCompatActivity {
         drawerToggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        Fragment fragment = new HomeFragment();
+        Fragment fragment = new HomeFragment(getApplicationContext());
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
@@ -94,7 +93,7 @@ public class ProtectedActivity extends AppCompatActivity {
                 logout();
                 return;
             default:
-                fragment = new HomeFragment();
+                fragment = new HomeFragment(getApplicationContext());
         }
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();

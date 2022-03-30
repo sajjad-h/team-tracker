@@ -7,35 +7,49 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.listeners.ProjectClickListener;
 import com.example.teamtracker.models.Project;
+import com.example.teamtracker.models.Task;
 
 import java.util.List;
 
-public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListViewHolder> {
-    private final Context context;
-    private List<Project> projectList;
+public class ProjectListAdapter extends ListAdapter<Project, ProjectListViewHolder> {
     private ProjectClickListener projectClickListener;
 
-    public ProjectListAdapter(Context context, List<Project>projectList, ProjectClickListener projectClickListener) {
-        this.context = context;
-        this.projectList = projectList;
+    public ProjectListAdapter(ProjectClickListener projectClickListener) {
+        super(DIFF_CALLBACK);
         this.projectClickListener = projectClickListener;
     }
+
+    private static final DiffUtil.ItemCallback<Project> DIFF_CALLBACK = new DiffUtil.ItemCallback<Project>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Project oldItem, @NonNull Project newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Project oldItem, @NonNull Project newItem) {
+            return oldItem.getTitle().equals(newItem.getTitle())
+                    && oldItem.getOwner().equals(newItem.getOwner());
+        }
+    };
 
     @NonNull
     @Override
     public ProjectListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.project_list_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_list_item_layout, parent, false);
         return new ProjectListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProjectListViewHolder holder, int position) {
-        Project project = projectList.get(position);
+        Project project = getItem(position);
         holder.setData(project);
         holder.tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,12 +66,6 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListViewHold
             }
         });
     }
-
-    @Override
-    public int getItemCount() {
-        return projectList.size();
-    }
-
 }
 
 class ProjectListViewHolder extends RecyclerView.ViewHolder {
@@ -68,6 +76,6 @@ class ProjectListViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setData(Project project) {
-        tv.setText(project.getName());
+        tv.setText(project.getTitle());
     }
 }

@@ -32,8 +32,7 @@ public class TaskSync {
         taskDao = RoomDB.getInstance(context).taskDao();
     }
 
-    public void sync(int projectId) {
-        System.out.println("hello Sajjad: " + projectId);
+    public void sync(String projectId) {
         List<Task> localTasks = taskDao.findTaskByProjectId(projectId);
         taskService.getTaskByProjectId(projectId, sharedRefs.getString(SharedRefs.ACCESS_TOKEN, "")).enqueue(new Callback<GetTaskByProjectIdResponseModel>() {
             @Override

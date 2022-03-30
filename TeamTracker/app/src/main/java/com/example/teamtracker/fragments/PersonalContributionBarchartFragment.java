@@ -54,7 +54,7 @@ public class PersonalContributionBarchartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllTasksByProjectId(project.getId()).observe(this, new Observer<List<Task>>() {
+        taskViewModel.getAllTasksByProjectId(project.getId().toString()).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 Long currentTime = System.currentTimeMillis();

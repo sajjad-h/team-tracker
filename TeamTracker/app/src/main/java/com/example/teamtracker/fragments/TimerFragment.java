@@ -110,7 +110,7 @@ public class TimerFragment extends Fragment {
                         } else if (TextUtils.isEmpty(taskDescription)) {
                             edtTaskDescription.setError("Description can't be empty.");
                         } else {
-                            Task task = new Task(taskTitle, taskDescription, startTime, duration, String.valueOf(project.getId()));
+                            Task task = new Task(taskTitle, taskDescription, startTime, duration, project.getId().toString());
                             taskViewModel.saveTask(task);
                             Toast.makeText(context, "Task Created Successfully!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();

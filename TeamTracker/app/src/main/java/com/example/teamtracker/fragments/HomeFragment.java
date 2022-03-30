@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +26,10 @@ import com.example.teamtracker.adapters.ProjectListAdapter;
 import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.listeners.ProjectClickListener;
 import com.example.teamtracker.models.Project;
+import com.example.teamtracker.models.Task;
+import com.example.teamtracker.util.SharedRefs;
+import com.example.teamtracker.viewmodels.ProjectViewModel;
+import com.example.teamtracker.viewmodels.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -33,20 +40,35 @@ public class HomeFragment extends Fragment {
     List<Project> projectList;
     ProjectListAdapter projectListAdapter;
     FloatingActionButton fabAddButton;
-    RoomDB database;
+    private ProjectViewModel projectViewModel;
+    private SharedRefs sharedRefs;
 
-    public HomeFragment() {
+    public HomeFragment(Context context) {
+        sharedRefs = new SharedRefs(context);
     }
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    public static HomeFragment newInstance(Context context) {
+        return new HomeFragment(context);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = RoomDB.getInstance(getContext());
-        projectList = database.projectDao().getAll();
+
+        projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
+        projectViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
+            @Override
+            public void onChanged(List<Project> projects) {
+                projectListAdapter.submitList(projects);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.smoothScrollToPosition(0);
+                    }
+                }, 500);
+            }
+        });
     }
 
     @Override
@@ -77,7 +99,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onLongClick(Project project, TextView textView) {
-            Toast.makeText(getContext(), "long selected: " + project.getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "long selected: " + project.getTitle(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -86,9 +108,8 @@ public class HomeFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getView().getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        projectListAdapter = new ProjectListAdapter(getContext(), projectList, projectClickListener);
+        projectListAdapter = new ProjectListAdapter(projectClickListener);
         recyclerView.setAdapter(projectListAdapter);
-        projectListAdapter.notifyDataSetChanged();
     }
 
     private void showAddProjectDialog(Context context) {
@@ -117,11 +138,8 @@ public class HomeFragment extends Fragment {
                         if (TextUtils.isEmpty(projectName)) {
                             projectNameEditText.setError("Project name can't be empty.");
                         } else {
-                            Project project = new Project(projectName);
-                            database.projectDao().insert(project);
-                            projectList.clear();
-                            projectList.addAll(database.projectDao().getAll());
-                            projectListAdapter.notifyDataSetChanged();
+                            Project project = new Project(projectName, sharedRefs.getString(SharedRefs.USER_ID, ""));
+                            projectViewModel.saveProject(project);
                             Toast.makeText(context, "Project Created Successfully!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }

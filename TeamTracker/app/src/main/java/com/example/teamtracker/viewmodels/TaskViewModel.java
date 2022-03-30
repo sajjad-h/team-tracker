@@ -32,7 +32,7 @@ public class TaskViewModel extends AndroidViewModel {
         taskRepository.delete(task);
     }
 
-    public LiveData<List<Task>> getAllTasksByProjectId(int projectId) {
+    public LiveData<List<Task>> getAllTasksByProjectId(String projectId) {
         return taskRepository.getAllTasksByProjectId(projectId);
     }
 }
