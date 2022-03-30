@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.adapters.TaskListAdapter;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class TaskViewFragment extends Fragment {
     RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
     LinearLayoutManager layoutManager;
     TaskListAdapter taskListAdapter;
     private Project project;
@@ -74,6 +76,16 @@ public class TaskViewFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTasksRecycler();
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getContext(), "syncing ...", Toast.LENGTH_SHORT).show();
+                taskSync.sync(project.getId());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void updateTasksRecycler() {
