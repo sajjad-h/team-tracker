@@ -43,7 +43,7 @@ public class TaskRepository {
         taskDao.delete(task);
     }
 
-    public LiveData<List<Task>> getAllTasksByProjectId(int projectId) {
+    public LiveData<List<Task>> getAllTasksByProjectId(String projectId) {
         return taskDao.findTaskByProjectIdLiveData(projectId);
     }
 

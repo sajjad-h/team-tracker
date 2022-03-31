@@ -13,10 +13,7 @@ import com.example.teamtracker.network.response.TaskResponseModel;
 
 import java.util.UUID;
 
-@Entity(foreignKeys = @ForeignKey(entity = Project.class,
-        parentColumns = "project_id",
-        childColumns = "project_id",
-        onDelete = CASCADE), tableName = "tasks")
+@Entity(tableName = "tasks")
 public class Task {
     @NonNull
     @PrimaryKey

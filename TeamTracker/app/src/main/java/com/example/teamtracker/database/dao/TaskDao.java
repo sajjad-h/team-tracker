@@ -22,10 +22,10 @@ public interface TaskDao {
     LiveData<List<Task>> getAll();
 
     @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY start_time DESC")
-    LiveData<List<Task>> findTaskByProjectIdLiveData(int projectId);
+    LiveData<List<Task>> findTaskByProjectIdLiveData(String projectId);
 
     @Query("SELECT * FROM tasks WHERE project_id = :projectId ORDER BY start_time DESC")
-    List<Task> findTaskByProjectId(int projectId);
+    List<Task> findTaskByProjectId(String projectId);
 
     @Update
     void update(Task task);

@@ -44,6 +44,7 @@ public class AuthRepository {
                                 sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
                                 sharedRefs.putString(SharedRefs.USER_NAME, user.getName());
                                 sharedRefs.putString(SharedRefs.USER_EMAIL, user.getEmail());
+                                sharedRefs.putString(SharedRefs.USER_ID, String.valueOf(user.getId()));
                                 isLoginSuccessful.setValue(true);
                             }
                             else {
@@ -80,10 +81,28 @@ public class AuthRepository {
                 String status = googleOAuthLoginResponseModel.getStatus();
                 if (status.equals("OK")) {
                     String accessToken = googleOAuthLoginResponseModel.getAccessToken();
-                    sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
-                    sharedRefs.putString(SharedRefs.USER_NAME, googleLoginResponseModel.getDisplayName());
-                    sharedRefs.putString(SharedRefs.USER_EMAIL, googleLoginResponseModel.getEmail());
-                    isLoginSuccessful.setValue(true);
+                    authService.getUserDetails(accessToken).enqueue(new Callback<UserDetailsResponseModel>() {
+                        @Override
+                        public void onResponse(Call<UserDetailsResponseModel> call, retrofit2.Response<UserDetailsResponseModel> response) {
+                            if (response.code() == 200) {
+                                UserDetailsResponseModel userDetailsResponseModel = response.body();
+                                UserResponseModel user = userDetailsResponseModel.getUser();
+                                sharedRefs.putString(SharedRefs.ACCESS_TOKEN, accessToken);
+                                sharedRefs.putString(SharedRefs.USER_NAME, user.getName());
+                                sharedRefs.putString(SharedRefs.USER_EMAIL, user.getEmail());
+                                sharedRefs.putString(SharedRefs.USER_ID, String.valueOf(user.getId()));
+                                isLoginSuccessful.setValue(true);
+                            }
+                            else {
+                                isLoginSuccessful.setValue(false);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserDetailsResponseModel> call, Throwable t) {
+                            isLoginSuccessful.setValue(false);
+                        }
+                    });
                 } else {
                     isLoginSuccessful.setValue(false);
                 }

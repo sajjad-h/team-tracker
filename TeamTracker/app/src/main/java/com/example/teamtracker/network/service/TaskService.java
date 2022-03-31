@@ -20,5 +20,5 @@ public interface TaskService {
 
     @GET("tasks/projects/{projectId}")
     @Headers({"Content-Type: application/json"})
-    Call<GetTaskByProjectIdResponseModel> getTaskByProjectId(@Path("projectId") int projectId, @Header("Authorization") String accessToken);
+    Call<GetTaskByProjectIdResponseModel> getTaskByProjectId(@Path("projectId") String projectId, @Header("Authorization") String accessToken);
 }
