@@ -23,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.teamtracker.R;
 import com.example.teamtracker.adapters.ProjectListAdapter;
-import com.example.teamtracker.database.RoomDB;
 import com.example.teamtracker.listeners.ProjectClickListener;
 import com.example.teamtracker.models.Project;
-import com.example.teamtracker.models.Task;
+import com.example.teamtracker.sync.ProjectSync;
 import com.example.teamtracker.util.SharedRefs;
 import com.example.teamtracker.viewmodels.ProjectViewModel;
-import com.example.teamtracker.viewmodels.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -37,11 +35,11 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    List<Project> projectList;
     ProjectListAdapter projectListAdapter;
     FloatingActionButton fabAddButton;
     private ProjectViewModel projectViewModel;
     private SharedRefs sharedRefs;
+    private ProjectSync projectSync;
 
     public HomeFragment(Context context) {
         sharedRefs = new SharedRefs(context);
@@ -54,6 +52,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        projectSync = new ProjectSync(getContext());
+        projectSync.sync();
 
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
         projectViewModel.getAllProjects().observe(this, new Observer<List<Project>>() {
