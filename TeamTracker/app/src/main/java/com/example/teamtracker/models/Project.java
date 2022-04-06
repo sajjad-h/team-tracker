@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.teamtracker.network.request.ProjectPostRequestModel;
+
 import java.util.UUID;
 
 @Entity(tableName = "projects")
@@ -47,5 +49,9 @@ public class Project {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public ProjectPostRequestModel toProjectPostRequestModel() {
+        return new ProjectPostRequestModel(this.id.toString(), this.title, this.owner);
     }
 }

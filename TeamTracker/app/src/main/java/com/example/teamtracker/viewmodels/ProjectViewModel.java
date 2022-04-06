@@ -23,6 +23,7 @@ public class ProjectViewModel extends AndroidViewModel {
 
     public void saveProject(Project project) {
         projectRepository.insert(project);
+        projectRepository.postProject(project);
     }
 
     public void delete(Project project) {

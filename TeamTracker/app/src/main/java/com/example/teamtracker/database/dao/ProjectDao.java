@@ -21,6 +21,9 @@ public interface ProjectDao {
     @Query("SELECT * FROM projects ORDER BY project_id DESC")
     LiveData<List<Project>> getAll();
 
+    @Query("SELECT * FROM projects WHERE owner = :owner ORDER BY project_id DESC")
+    List<Project> findProjectByOwner(String owner);
+
     @Delete
     void delete(Project note);
 }
